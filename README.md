@@ -30,8 +30,8 @@ Windows
 TODO
 ====
 - [ ] Merge pre-existing conflict for 'part2' slides (there's an 'sms' version)
-- [ ] Update Host<->Device transfer exericse + slides with proper pinned mem approach
+- [ ] Update Host<->Device transfer exercise + slides with proper pinned mem approach
 - [ ] Add zero-copy transfer to Host<->Device transfer exercise + slides
 - [ ] Sort out Visual Studio solutions (try using VS 2010)
 - [ ] Add Unix Makefiles
-- [ ] Instrutions for using HP server and Zoo
+- [ ] Instructions for using HP server and Zoo
