@@ -162,7 +162,9 @@ int main(int argc, char *argv[])
     // **************************************************************
     // Create CL image from GL texture, instead of a regular CL image
     // **************************************************************
-    cl::ImageFormat format = {CL_RGBA, CL_UNORM_INT8};
+    cl::ImageFormat format;
+    format.image_channel_order     = CL_RGBA;
+    format.image_channel_data_type = CL_UNORM_INT8;
     cl::Image2D d_texture(context, CL_MEM_WRITE_ONLY, format,
                           windowWidth, windowHeight);
 
