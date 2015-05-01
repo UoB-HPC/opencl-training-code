@@ -18,3 +18,7 @@ EXE = nbody
 
 all:
 	$(CXX) $(FLAGS) -I $(INC) $(SRC) $(LIBS) -o $(EXE)
+
+clean:
+	rm -f $(EXE)
+
