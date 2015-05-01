@@ -7,8 +7,10 @@
 #include <sstream>
 #include <vector>
 
-#define GLEW_STATIC
-#include <GL/glew.h>
+#if defined(_WIN32)
+  #define GLEW_STATIC
+  #include <GL/glew.h>
+#endif
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
@@ -120,12 +122,41 @@ int main(int argc, char *argv[])
     cl_platform_id platform;
 	device.getInfo(CL_DEVICE_PLATFORM, &platform);
 
-	cl_context_properties properties[] = {
-		CL_GL_CONTEXT_KHR, (cl_context_properties)wglGetCurrentContext(),
-		CL_WGL_HDC_KHR, (cl_context_properties)wglGetCurrentDC(),
-		CL_CONTEXT_PLATFORM, (cl_context_properties)platform,
-		0
-	};
+
+#if defined(_WIN32)
+
+    // Windows
+    cl_context_properties properties[] = {
+      CL_GL_CONTEXT_KHR, (cl_context_properties)wglGetCurrentContext(),
+      CL_WGL_HDC_KHR, (cl_context_properties)wglGetCurrentDC(),
+      CL_CONTEXT_PLATFORM, (cl_context_properties)platform,
+      0
+    };
+
+#elif defined(__APPLE__)
+
+    // OS X
+    CGLContextObj     kCGLContext     = CGLGetCurrentContext();
+    CGLShareGroupObj  kCGLShareGroup  = CGLGetShareGroup(kCGLContext);
+
+    cl_context_properties properties[] = {
+      CL_CONTEXT_PROPERTY_USE_CGL_SHAREGROUP_APPLE,
+      (cl_context_properties) kCGLShareGroup,
+      0
+    };
+
+#else
+
+    // Linux
+    cl_context_properties properties[] = {
+      CL_GL_CONTEXT_KHR, (cl_context_properties)glXGetCurrentContext(),
+      CL_GLX_DISPLAY_KHR, (cl_context_properties)glXGetCurrentDisplay(),
+      CL_CONTEXT_PLATFORM, (cl_context_properties)platform,
+      0
+    };
+
+#endif
+
 
     cl::Context context(device, useGLInterop ? properties : NULL);
     cl::CommandQueue queue(context);
@@ -335,9 +366,9 @@ void initGraphics()
   // Turn on Vsync
   SDL_GL_SetSwapInterval(1);
 
-
+#if defined(_WIN32)
   glewInit();
-
+#endif
 
   // Build vertex shader
   std::string vert_shader = util::loadProgram("vert_shader.glsl");
@@ -380,8 +411,6 @@ void initGraphics()
     }
 	delete[] buildLog;
   }
-
-  PFNGLATTACHSHADERPROC gl_AttachShader = (PFNGLATTACHSHADERPROC)SDL_GL_GetProcAddress("glAttachShader");
 
   // Create progam
   gl.program = glCreateProgram();
