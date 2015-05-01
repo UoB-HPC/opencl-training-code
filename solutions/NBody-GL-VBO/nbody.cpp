@@ -303,7 +303,7 @@ int main(int argc, char *argv[])
               << std::endl;
   }
 
-#if defined(_WIN32) && !defined(__MINGW32__)
+#if defined(_WIN32)
   system("pause");
 #endif
 
