@@ -2,6 +2,7 @@ Development repository for the UoB-HPC 'Advanced HandsOnOpenCL'
 material. At some point, this will probably become public, when we
 have ironed out the various issues it currently has.
 
+
 Managing Slides
 ===============
 Although PowerPoint doesn't play well with Git, it's still useful to
@@ -11,12 +12,19 @@ when. PowerPoint for Mac has a reasonable 'compare and merge' facility
 conflict. Email-based mutexes could also be used to reduce the risk of
 conflicts.
 
+
 Dependencies
 ============
 
 OS X
------
+----
 - libsdl2
+
+Windows
+-------
+- Windows 7 or newer
+- Visual Studio 2010 or newer
+- Any OpenCL driver (e.g. NVIDIA, AMD or Intel)
 
 
 TODO
@@ -26,3 +34,4 @@ TODO
 - [ ] Add zero-copy transfer to Host<->Device transfer exercise + slides
 - [ ] Sort out Visual Studio solutions (try using VS 2010)
 - [ ] Add Unix Makefiles
+- [ ] Instrutions for using HP server and Zoo
