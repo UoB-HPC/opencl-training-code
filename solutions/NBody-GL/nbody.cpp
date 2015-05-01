@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
 	device.getInfo(CL_DEVICE_PLATFORM, &platform);
 
 
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32)
+#if defined(_WIN32)
 
     // Windows
     cl_context_properties properties[] = {
