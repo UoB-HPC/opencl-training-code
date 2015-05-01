@@ -11,6 +11,14 @@ when. PowerPoint for Mac has a reasonable 'compare and merge' facility
 conflict. Email-based mutexes could also be used to reduce the risk of
 conflicts.
 
+Dependencies
+============
+
+OS X
+-----
+- libsdl2
+
+
 TODO
 ====
 - [ ] Merge pre-existing conflict for 'part2' slides (there's an 'sms' version)
