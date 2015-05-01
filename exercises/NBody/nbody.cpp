@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
   try
   {
     uint64_t startTime, endTime;
-	util::Timer timer;
+    util::Timer timer;
 
     parseArguments(argc, argv);
 
@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
     }
 
     cl::make_kernel<cl::Buffer, cl::Buffer, cl::Buffer, cl_uint, cl_float, cl_float>
-	  nbodyKernel(program, "nbody");
+      nbodyKernel(program, "nbody");
 
     // Initialize device buffers
     cl::Buffer d_positions0, d_positions1, d_velocities;
@@ -134,17 +134,17 @@ int main(int argc, char *argv[])
     // Read final positions
     cl::copy(queue, d_positionsIn, begin(h_positions), end(h_positions));
 
-	endTime = timer.getTimeMicroseconds();
+    endTime = timer.getTimeMicroseconds();
     std::cout << "OpenCL took " << ((endTime-startTime)*1e-3) << "ms"
               << std::endl << std::endl;
 
 
     // Run reference code
     std::cout << "Running reference..." << std::endl;
-	startTime = timer.getTimeMicroseconds();
+    startTime = timer.getTimeMicroseconds();
     std::vector<float> h_reference(4*numBodies);
     runReference(h_initialPositions, h_initialVelocities, h_reference);
-	endTime = timer.getTimeMicroseconds();
+    endTime = timer.getTimeMicroseconds();
     std::cout << "Reference took " << ((endTime-startTime)*1e-3) << "ms"
               << std::endl << std::endl;
 

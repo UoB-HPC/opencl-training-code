@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
 {
   try
   {
-	util::Timer timer;
+    util::Timer timer;
     uint64_t startTime, endTime;
 
     parseArguments(argc, argv);
@@ -133,11 +133,11 @@ int main(int argc, char *argv[])
     }
 
     cl::make_kernel<cl::Buffer, cl::Buffer, cl::Buffer, cl_uint>
-	  nbodyKernel(program, "nbody");
+      nbodyKernel(program, "nbody");
     cl::make_kernel<cl::Image2D>
-	  fillKernel(program, "fillTexture");
+      fillKernel(program, "fillTexture");
     cl::make_kernel<cl::Buffer, cl::Image2D, cl_uint, cl_uint>
-	  drawKernel(program, "drawPositions");
+      drawKernel(program, "drawPositions");
 
     // Initialize device buffers
     cl::Buffer d_positions0, d_positions1, d_velocities;

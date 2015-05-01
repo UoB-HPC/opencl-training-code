@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 {
   try
   {
-	util::Timer timer;
+    util::Timer timer;
     uint64_t startTime, endTime;
 
     parseArguments(argc, argv);
@@ -111,16 +111,16 @@ int main(int argc, char *argv[])
     }
 
     cl::Device device = devices[deviceIndex];
-	std::string extensions = device.getInfo<CL_DEVICE_EXTENSIONS>();
-	bool useGLInterop = extensions.find("cl_khr_gl_sharing") != std::string::npos;
+    std::string extensions = device.getInfo<CL_DEVICE_EXTENSIONS>();
+    bool useGLInterop = extensions.find("cl_khr_gl_sharing") != std::string::npos;
 
     std::string name = device.getInfo<CL_DEVICE_NAME>();
     std::cout << std::endl << "Using OpenCL device: " << name << std::endl;
-	if (!useGLInterop)
-		std::cout << "WARNING: CL/GL not supported" << std::endl;
+    if (!useGLInterop)
+      std::cout << "WARNING: CL/GL not supported" << std::endl;
 
     cl_platform_id platform;
-	device.getInfo(CL_DEVICE_PLATFORM, &platform);
+    device.getInfo(CL_DEVICE_PLATFORM, &platform);
 
 
 #if defined(_WIN32)
@@ -190,16 +190,16 @@ int main(int argc, char *argv[])
     // Initialize device buffers
     cl::Buffer d_positions[2], d_velocities;
 
-	if (useGLInterop)
-	{
-		d_positions[0] = cl::BufferGL(context, CL_MEM_READ_WRITE, gl.positions[0]);
-		d_positions[1] = cl::BufferGL(context, CL_MEM_READ_WRITE, gl.positions[1]);
-	}
-	else
-	{
-		d_positions[0] = cl::Buffer(context, CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR, 4 * numBodies*sizeof(cl_float));
-		d_positions[1] = cl::Buffer(context, CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR, 4 * numBodies*sizeof(cl_float));
-	}
+    if (useGLInterop)
+    {
+      d_positions[0] = cl::BufferGL(context, CL_MEM_READ_WRITE, gl.positions[0]);
+      d_positions[1] = cl::BufferGL(context, CL_MEM_READ_WRITE, gl.positions[1]);
+    }
+    else
+    {
+      d_positions[0] = cl::Buffer(context, CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR, 4 * numBodies*sizeof(cl_float));
+      d_positions[1] = cl::Buffer(context, CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR, 4 * numBodies*sizeof(cl_float));
+    }
     d_velocities = cl::Buffer(context, CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR,
                               4*numBodies*sizeof(float));
 
@@ -230,8 +230,8 @@ int main(int argc, char *argv[])
       // Acquire buffers from GL
       // ***********************
       glFlush();
-	  if (useGLInterop)
-		queue.enqueueAcquireGLObjects(&clglObjects);
+      if (useGLInterop)
+        queue.enqueueAcquireGLObjects(&clglObjects);
 
       nbodyKernel(cl::EnqueueArgs(queue, global, local),
                   d_positions[INDEX_IN], d_positions[INDEX_OUT], d_velocities,
@@ -240,19 +240,19 @@ int main(int argc, char *argv[])
       // **************************
       // Release buffers back to GL
       // **************************
-	  if (useGLInterop)
-		queue.enqueueReleaseGLObjects(&clglObjects);
+      if (useGLInterop)
+        queue.enqueueReleaseGLObjects(&clglObjects);
       queue.flush();
 
-	  // Manually copy data into GL vertex buffer if we don't have GL interop
-	  if (!useGLInterop)
-	  {
-		  void *data = queue.enqueueMapBuffer(d_positions[INDEX_OUT],
-											  CL_TRUE, CL_MAP_READ,
-											  0, numBodies*sizeof(cl_float4));
-		  glBufferSubData(GL_ARRAY_BUFFER, 0, numBodies*sizeof(cl_float4), data);
-		  queue.enqueueUnmapMemObject(d_positions[INDEX_OUT], data);
-	  }
+      // Manually copy data into GL vertex buffer if we don't have GL interop
+      if (!useGLInterop)
+      {
+        void *data = queue.enqueueMapBuffer(d_positions[INDEX_OUT],
+                                            CL_TRUE, CL_MAP_READ,
+                                            0, numBodies*sizeof(cl_float4));
+        glBufferSubData(GL_ARRAY_BUFFER, 0, numBodies*sizeof(cl_float4), data);
+        queue.enqueueUnmapMemObject(d_positions[INDEX_OUT], data);
+      }
 
       // Render body positions
       glUseProgram(gl.program);
@@ -388,7 +388,7 @@ void initGraphics()
     {
       fprintf(stderr, "Error whilst building vertex shader: \n%s\n", buildLog);
     }
-	delete[] buildLog;
+    delete[] buildLog;
   }
 
   // Build fragment shader
@@ -402,14 +402,14 @@ void initGraphics()
     glGetShaderiv(fragShader, GL_COMPILE_STATUS, &buildResult);
     int   buildLogLen = 0;
     glGetShaderiv(fragShader, GL_INFO_LOG_LENGTH, &buildLogLen);
-    char  *buildLog = new char[buildLogLen];
-	memset(buildLog, 0, buildLogLen);
+    char *buildLog = new char[buildLogLen];
+    memset(buildLog, 0, buildLogLen);
     glGetShaderInfoLog(fragShader, buildLogLen, NULL, buildLog);
     if (GL_TRUE != buildResult)
     {
       fprintf(stderr, "Error whilst building fragment shader: \n%s\n", buildLog);
     }
-	delete[] buildLog;
+    delete[] buildLog;
   }
 
   // Create progam
@@ -420,17 +420,17 @@ void initGraphics()
   {
     GLint linkResult = GL_FALSE;
     glGetProgramiv(gl.program, GL_LINK_STATUS, &linkResult);
-    int linkLogLen = 0;
+    int   linkLogLen = 0;
     glGetProgramiv(gl.program, GL_INFO_LOG_LENGTH, &linkLogLen);
     char *linkLog = new char[linkLogLen];
-	memset(linkLog, 0, linkLogLen);
+    memset(linkLog, 0, linkLogLen);
     glGetProgramInfoLog(gl.program, linkLogLen, NULL, linkLog);
     if (GL_TRUE != linkResult)
     {
       fprintf(stderr, "Unable to link shaders:\n%s\n", linkLog);
       exit(1);
     }
-	delete[] linkLog;
+    delete[] linkLog;
   }
 
   glDeleteShader(vertShader);
@@ -448,8 +448,8 @@ void initGraphics()
   glm::mat4 viewMatrix = glm::lookAt(eye, target, up);
 
   // Generate projection matrix
-  float fov         = 2.0f * atan(1.0f / eye.z);
-  float aspectRatio = windowWidth/(float)windowHeight;
+  float fov          = 2.0f * atan(1.0f / eye.z);
+  float aspectRatio  = windowWidth/(float)windowHeight;
   float nearPlane    = 0.1f;
   float farPlane     = 50.f;
   glm::mat4 projMatrix = glm::perspective(fov, aspectRatio, nearPlane, farPlane);
