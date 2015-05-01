@@ -3,6 +3,7 @@
 *.suo
 *.vcxproj.user
 
+ipch/
 Debug/
 Release/
 
