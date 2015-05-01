@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HostDevTransfer", "HostDevTransfer\HostDevTransfer.vcxproj", "{78628D4A-73CC-4C53-8239-49F642C7AA05}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NBody", "NBody\NBody.vcxproj", "{D2A527A3-94CA-4BA0-91B6-0F644F7504EA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NBody-GL", "NBody-GL\NBody-GL.vcxproj", "{00837760-3548-4DD3-994D-3F7DA5470F44}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bilateral", "Bilateral\Bilateral.vcxproj", "{F08CBA61-B895-4F44-8523-9F715BFC33BC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{78628D4A-73CC-4C53-8239-49F642C7AA05}.Debug|Win32.ActiveCfg = Debug|Win32
+		{78628D4A-73CC-4C53-8239-49F642C7AA05}.Debug|Win32.Build.0 = Debug|Win32
+		{78628D4A-73CC-4C53-8239-49F642C7AA05}.Release|Win32.ActiveCfg = Release|Win32
+		{78628D4A-73CC-4C53-8239-49F642C7AA05}.Release|Win32.Build.0 = Release|Win32
+		{D2A527A3-94CA-4BA0-91B6-0F644F7504EA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D2A527A3-94CA-4BA0-91B6-0F644F7504EA}.Debug|Win32.Build.0 = Debug|Win32
+		{D2A527A3-94CA-4BA0-91B6-0F644F7504EA}.Release|Win32.ActiveCfg = Release|Win32
+		{D2A527A3-94CA-4BA0-91B6-0F644F7504EA}.Release|Win32.Build.0 = Release|Win32
+		{00837760-3548-4DD3-994D-3F7DA5470F44}.Debug|Win32.ActiveCfg = Debug|Win32
+		{00837760-3548-4DD3-994D-3F7DA5470F44}.Debug|Win32.Build.0 = Debug|Win32
+		{00837760-3548-4DD3-994D-3F7DA5470F44}.Release|Win32.ActiveCfg = Release|Win32
+		{00837760-3548-4DD3-994D-3F7DA5470F44}.Release|Win32.Build.0 = Release|Win32
+		{F08CBA61-B895-4F44-8523-9F715BFC33BC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F08CBA61-B895-4F44-8523-9F715BFC33BC}.Debug|Win32.Build.0 = Debug|Win32
+		{F08CBA61-B895-4F44-8523-9F715BFC33BC}.Release|Win32.ActiveCfg = Release|Win32
+		{F08CBA61-B895-4F44-8523-9F715BFC33BC}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
