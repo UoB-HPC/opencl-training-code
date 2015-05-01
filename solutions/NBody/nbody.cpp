@@ -178,7 +178,7 @@ int main(int argc, char *argv[])
       float dz    = (rz-iz);
       float dist  = sqrt(dx*dx + dy*dy + dz*dz);
 
-      if (dist > tolerance || isnan(dist))
+      if (dist > tolerance || (dist!=dist))
       {
         if (!errors)
         {
