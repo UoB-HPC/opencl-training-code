@@ -7,3 +7,14 @@ ipch/
 Debug/
 Release/
 
+output.bmp
+
+exercises/Bilateral/bilateral
+exercises/HostDevTransfer/transfer
+exercises/NBody-GL/nbody
+exercises/NBody/nbody
+solutions/Bilateral/bilateral
+solutions/HostDevTransfer/transfer
+solutions/NBody-GL-VBO/nbody
+solutions/NBody-GL/nbody
+solutions/NBody/nbody
