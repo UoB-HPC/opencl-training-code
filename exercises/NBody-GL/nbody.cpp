@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
       if (init2D)
       {
         // Generate a random point on the edge of a circle
-        float angle = 2.f * M_PI * (rand()/(float)RAND_MAX);
+        float angle = 2.f * (float)M_PI * (rand()/(float)RAND_MAX);
         h_initialPositions[i*4 + 0] = sphereRadius * cos(angle);
         h_initialPositions[i*4 + 1] = sphereRadius * sin(angle);
         h_initialPositions[i*4 + 2] = 0;
@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
       else
       {
         // Generate a random point on the surface of a sphere
-        float longitude             = 2.f * M_PI * (rand()/(float)RAND_MAX);
+        float longitude             = 2.f * (float)M_PI * (rand()/(float)RAND_MAX);
         float latitude              = acos((2.f * (rand()/(float)RAND_MAX)) - 1);
         h_initialPositions[i*4 + 0] = sphereRadius*sin(latitude)*cos(longitude);
         h_initialPositions[i*4 + 1] = sphereRadius*sin(latitude)*sin(longitude);
