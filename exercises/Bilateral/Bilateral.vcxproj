@@ -60,8 +60,7 @@
       <AdditionalDependencies>SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(SolutionDir)..\common\SDL2.dll" "$(TargetDir)"
-copy /Y "$(SolutionDir)..\common\*.bmp" "$(ProjectDir)"</Command>
+      <Command>copy /Y "$(SolutionDir)..\common\SDL2.dll" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
