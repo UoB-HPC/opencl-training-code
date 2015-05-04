@@ -46,7 +46,7 @@ To change the compiler from the default C++ compiler set the `CXX` variable; for
 
 TODO
 ====
-- [ ] Merge pre-existing conflict for 'part2' slides (there's an 'sms' version)
+- [x] Merge pre-existing conflict for 'part2' slides (there's an 'sms' version)
 - [ ] Update Host<->Device transfer exercise + slides with proper pinned mem approach
 - [ ] Add zero-copy transfer to Host<->Device transfer exercise + slides
 - [ ] Sort out Visual Studio solutions (try using VS 2010)
