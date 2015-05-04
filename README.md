@@ -39,5 +39,5 @@ TODO
 - [ ] Update Host<->Device transfer exercise + slides with proper pinned mem approach
 - [ ] Add zero-copy transfer to Host<->Device transfer exercise + slides
 - [ ] Sort out Visual Studio solutions (try using VS 2010)
-- [ ] Add Unix Makefiles
+- [x] Add Unix Makefiles
 - [ ] Instructions for using HP server and Zoo
