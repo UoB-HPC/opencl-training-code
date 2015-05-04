@@ -11,6 +11,10 @@
 #include "SDL2/SDL_opengl.h"
 #undef main
 
+#if !defined(_WIN32) && !defined(__APPLE__)
+    #include <GL/glx.h>
+#endif
+
 #define __CL_ENABLE_EXCEPTIONS
 #include <cl.hpp>
 
@@ -151,9 +155,9 @@ int main(int argc, char *argv[])
     d_velocities = cl::Buffer(context, CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR,
                               4*numBodies*sizeof(float));
 
-    cl::copy(queue, begin(h_initialPositions), end(h_initialPositions),
+    cl::copy(queue, h_initialPositions.begin(), h_initialPositions.end(),
              d_positions0);
-    cl::copy(queue, begin(h_initialVelocities), end(h_initialVelocities),
+    cl::copy(queue, h_initialVelocities.begin(), h_initialVelocities.end(),
              d_velocities);
 
     cl::Buffer d_positionsIn  = d_positions0;
