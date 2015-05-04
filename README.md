@@ -20,6 +20,12 @@ OS X
 ----
 - libsdl2
 
+Ubuntu
+------
+- mesa-common-dev
+- libsdl2-dev
+- libgl1-mesa-glx
+
 Windows
 -------
 - Windows 7 or newer
