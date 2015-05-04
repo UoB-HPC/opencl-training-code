@@ -104,9 +104,9 @@ int main(int argc, char *argv[])
     d_velocities = cl::Buffer(context, CL_MEM_READ_WRITE,
                               4*numBodies*sizeof(float));
 
-    cl::copy(queue, begin(h_initialPositions), end(h_initialPositions),
+    cl::copy(queue, h_initialPositions.begin(), h_initialPositions.end(),
              d_positions0);
-    cl::copy(queue, begin(h_initialVelocities), end(h_initialVelocities),
+    cl::copy(queue, h_initialVelocities.begin(), h_initialVelocities.end(),
              d_velocities);
 
     cl::Buffer d_positionsIn  = d_positions0;
@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
     }
 
     // Read final positions
-    cl::copy(queue, d_positionsIn, begin(h_positions), end(h_positions));
+    cl::copy(queue, d_positionsIn, h_positions.begin(), h_positions.end());
 
     endTime = timer.getTimeMicroseconds();
     std::cout << "OpenCL took " << ((endTime-startTime)*1e-3) << "ms"
