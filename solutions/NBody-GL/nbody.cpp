@@ -11,6 +11,11 @@
 #include <SDL2/SDL_opengl.h>
 #undef main
 
+#if !defined(_WIN32) && !defined(__APPLE__)
+    #include <GL/glx.h>
+#endif
+
+
 #define __CL_ENABLE_EXCEPTIONS
 #include <cl.hpp>
 
