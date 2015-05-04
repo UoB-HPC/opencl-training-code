@@ -33,6 +33,17 @@ Windows
 - Any OpenCL driver (e.g. NVIDIA, AMD or Intel)
 
 
+Compiling
+=========
+
+Unix and OS X
+-------------
+
+Just type `make`.
+There is a Makefile in each project directory, and global ones in the `exercises` and `solutions` directories.
+To change the compiler from the default C++ compiler set the `CXX` variable; for example `make CXX=icpc`.
+
+
 TODO
 ====
 - [ ] Merge pre-existing conflict for 'part2' slides (there's an 'sms' version)
