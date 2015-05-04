@@ -7,7 +7,7 @@ endif
 INC = ../../common
 FLAGS = -O3
 LIBS = -lm
-LDFLAGS = -lOpenCL -lGL
+LDFLAGS = -lOpenCL -lGL -lGLEW
 
 PLATFORM = $(shell uname -s)
 ifeq ($(PLATFORM), Darwin)
