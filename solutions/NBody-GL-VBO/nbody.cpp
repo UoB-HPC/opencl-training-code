@@ -372,7 +372,7 @@ void initGraphics()
   // Turn on Vsync
   SDL_GL_SetSwapInterval(1);
 
-#if defined(_WIN32)
+#if defined(_WIN32) || !defined(__APPLE__)
   glewInit();
 #endif
 
