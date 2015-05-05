@@ -118,7 +118,12 @@ int main(int argc, char *argv[])
 
     cl::Device device = devices[deviceIndex];
     std::string extensions = device.getInfo<CL_DEVICE_EXTENSIONS>();
+
+#if defined(__APPLE__)
+    bool useGLInterop = extensions.find("cl_APPLE_gl_sharing") != std::string::npos;
+#else
     bool useGLInterop = extensions.find("cl_khr_gl_sharing") != std::string::npos;
+#endif
 
     std::string name = device.getInfo<CL_DEVICE_NAME>();
     std::cout << std::endl << "Using OpenCL device: " << name << std::endl;
