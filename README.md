@@ -20,6 +20,12 @@ OS X
 ----
 - libsdl2
 
+Ubuntu
+------
+- mesa-common-dev
+- libsdl2-dev
+- libgl1-mesa-glx
+
 Windows
 -------
 - Windows 7 or newer
@@ -27,11 +33,22 @@ Windows
 - Any OpenCL driver (e.g. NVIDIA, AMD or Intel)
 
 
+Compiling
+=========
+
+Unix and OS X
+-------------
+
+Just type `make`.
+There is a Makefile in each project directory, and global ones in the `exercises` and `solutions` directories.
+To change the compiler from the default C++ compiler set the `CXX` variable; for example `make CXX=icpc`.
+
+
 TODO
 ====
-- [ ] Merge pre-existing conflict for 'part2' slides (there's an 'sms' version)
+- [x] Merge pre-existing conflict for 'part2' slides (there's an 'sms' version)
 - [ ] Update Host<->Device transfer exercise + slides with proper pinned mem approach
 - [ ] Add zero-copy transfer to Host<->Device transfer exercise + slides
 - [ ] Sort out Visual Studio solutions (try using VS 2010)
-- [ ] Add Unix Makefiles
+- [x] Add Unix Makefiles
 - [ ] Instructions for using HP server and Zoo
