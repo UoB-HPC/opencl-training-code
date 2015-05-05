@@ -7,21 +7,22 @@
 #include <sstream>
 #include <vector>
 
-#if defined(_WIN32) || !defined(__APPLE__)
+#if defined(_WIN32)
   #define GLEW_STATIC
   #include <GL/glew.h>
+#endif
+
+
+#if !defined(_WIN32) && !defined(__APPLE__)
+    #define GL_GLEXT_PROTOTYPES
+    #include <GL/gl.h>
+    #include <GL/glx.h>
+    #include <GL/glext.h>
 #endif
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 #undef main
-
-#if !defined(_WIN32) && !defined(__APPLE__)
-    #include <GL/gl.h>
-    #include <GL/glx.h>
-#endif
-
-
 #define __CL_ENABLE_EXCEPTIONS
 #include <cl.hpp>
 
