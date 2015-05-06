@@ -49,10 +49,10 @@ TODO
 - [x] Merge pre-existing conflict for 'part2' slides (there's an 'sms' version)
 - [ ] Update Host<->Device transfer exercise + slides with proper pinned mem approach
 - [ ] Add zero-copy transfer to Host<->Device transfer exercise + slides
-- [ ] Sort out Visual Studio solutions (try using VS 2010)
+- [x] Sort out Visual Studio solutions (try using VS 2010)
 - [x] Add Unix Makefiles
 - [ ] Instructions for using HP server and Zoo
 - [ ] Add deps to part 1 slides
 - [x] Remove native functions in Bilaterial exercise
 - [ ] Update intro with correct path to all course material
-- [x] Add links to IWOCL talks to the outro slides 
+- [x] Add links to IWOCL talks to the outro slides
