@@ -211,8 +211,6 @@ int main(int argc, char *argv[])
     {
       d_positions[0] = cl::Buffer(context, CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR, 4 * numBodies*sizeof(cl_float));
       d_positions[1] = cl::Buffer(context, CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR, 4 * numBodies*sizeof(cl_float));
-    cl::copy(queue, h_initialPositions.begin(), h_initialPositions.end(),
-             d_positions[0]);
     }
     d_velocities = cl::Buffer(context, CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR,
                               4*numBodies*sizeof(float));
@@ -227,15 +225,9 @@ int main(int argc, char *argv[])
       // We have to qcquire the objects from GL before we can copy
       glFinish();
       queue.enqueueAcquireGLObjects(&clglObjects);
-      //queue.finish();
-      try {
-      cl::copy(queue, h_initialPositions.begin(), h_initialPositions.end(),
-               d_positions[0]);
-      } catch (cl::Error e) {
-          std::cout << "it broke\n";
-      }
+      queue.enqueueWriteBuffer(d_positions[0], CL_FALSE, 0, h_initialPositions.size() * sizeof(float), &h_initialPositions[0]);
       queue.enqueueReleaseGLObjects(&clglObjects);
-      queue.flush();
+      queue.finish();
     }
     else
     {
