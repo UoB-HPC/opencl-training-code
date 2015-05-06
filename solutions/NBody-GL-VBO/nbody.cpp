@@ -222,9 +222,10 @@ int main(int argc, char *argv[])
 
     if (useGLInterop)
     {
-      // We have to qcquire the objects from GL before we can copy
+      // We have to acquire the objects from GL before we can copy
       glFinish();
       queue.enqueueAcquireGLObjects(&clglObjects);
+      // Want to use cl::copy but have to use enqueueWriteBuffer due to driver bug workaround
       queue.enqueueWriteBuffer(d_positions[0], CL_FALSE, 0, h_initialPositions.size() * sizeof(float), &h_initialPositions[0]);
       queue.enqueueReleaseGLObjects(&clglObjects);
       queue.finish();
