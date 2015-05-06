@@ -21,10 +21,10 @@ kernel void bilateral(read_only image2d_t input,
       float norm, weight;
       float4 pixel = read_imagef(input, sampler, (int2)(x+i, y+j));
 
-      norm = sqrt((float)(i*i) + (float)(j*j)) * (1.f/sigmaDomain);
+      norm = native_sqrt((float)(i*i) + (float)(j*j)) * native_recip(sigmaDomain);
       weight = native_exp(-0.5f * (norm*norm));
 
-      norm = fast_distance(pixel.xyz, center.xyz) * (1.f/sigmaRange);
+      norm = fast_distance(pixel.xyz, center.xyz) * native_recip(sigmaRange);
       weight *= native_exp(-0.5f * (norm*norm));
 
       coeff += weight;
