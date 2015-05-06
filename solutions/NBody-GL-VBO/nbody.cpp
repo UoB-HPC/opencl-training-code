@@ -211,18 +211,41 @@ int main(int argc, char *argv[])
     {
       d_positions[0] = cl::Buffer(context, CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR, 4 * numBodies*sizeof(cl_float));
       d_positions[1] = cl::Buffer(context, CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR, 4 * numBodies*sizeof(cl_float));
+    cl::copy(queue, h_initialPositions.begin(), h_initialPositions.end(),
+             d_positions[0]);
     }
     d_velocities = cl::Buffer(context, CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR,
                               4*numBodies*sizeof(float));
 
-    cl::copy(queue, h_initialPositions.begin(), h_initialPositions.end(),
-             d_positions[0]);
-    cl::copy(queue, h_initialVelocities.begin(), h_initialVelocities.end(),
-             d_velocities);
-
+    // Create a Memory list of the CL/GL objects
     std::vector<cl::Memory> clglObjects;
     clglObjects.push_back(d_positions[0]);
     clglObjects.push_back(d_positions[1]);
+
+    if (useGLInterop)
+    {
+      // We have to qcquire the objects from GL before we can copy
+      glFinish();
+      queue.enqueueAcquireGLObjects(&clglObjects);
+      //queue.finish();
+      try {
+      cl::copy(queue, h_initialPositions.begin(), h_initialPositions.end(),
+               d_positions[0]);
+      } catch (cl::Error e) {
+          std::cout << "it broke\n";
+      }
+      queue.enqueueReleaseGLObjects(&clglObjects);
+      queue.flush();
+    }
+    else
+    {
+      cl::copy(queue, h_initialPositions.begin(), h_initialPositions.end(),
+               d_positions[0]);
+    }
+
+    cl::copy(queue, h_initialVelocities.begin(), h_initialVelocities.end(),
+             d_velocities);
+
 
     std::cout << "OpenCL initialization complete." << std::endl << std::endl;
 
