@@ -22,10 +22,10 @@ kernel void bilateral(global const uchar4 *input,
       float4 pixel = convert_float4(input[_x + _y*width])/255.f;
 
       norm = sqrt((float)(i*i) + (float)(j*j)) * (1.f/sigmaDomain);
-      weight = native_exp(-0.5f * (norm*norm));
+      weight = exp(-0.5f * (norm*norm));
 
-      norm = fast_distance(pixel.xyz, center.xyz) * (1.f/sigmaRange);
-      weight *= native_exp(-0.5f * (norm*norm));
+      norm = distance(pixel.xyz, center.xyz) * (1.f/sigmaRange);
+      weight *= exp(-0.5f * (norm*norm));
 
       coeff += weight;
       sum += weight*pixel;
