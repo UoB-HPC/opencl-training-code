@@ -53,4 +53,5 @@ TODO
 - [x] Add Unix Makefiles
 - [ ] Instructions for using HP server and Zoo
 - [ ] Add deps to part 1 slides
+- [ ] Remove native functions in Bilaterial exercise
 
