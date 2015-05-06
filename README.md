@@ -52,3 +52,5 @@ TODO
 - [ ] Sort out Visual Studio solutions (try using VS 2010)
 - [x] Add Unix Makefiles
 - [ ] Instructions for using HP server and Zoo
+- [ ] Add deps to part 1 slides
+
