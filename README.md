@@ -53,6 +53,6 @@ TODO
 - [x] Add Unix Makefiles
 - [ ] Instructions for using HP server and Zoo
 - [ ] Add deps to part 1 slides
-- [ ] Remove native functions in Bilaterial exercise
+- [x] Remove native functions in Bilaterial exercise
 - [ ] Update intro with correct path to all course material
 - [x] Add links to IWOCL talks to the outro slides 
