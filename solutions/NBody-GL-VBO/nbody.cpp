@@ -7,21 +7,22 @@
 #include <sstream>
 #include <vector>
 
-#if defined(_WIN32) || !defined(__APPLE__)
+#if defined(_WIN32)
   #define GLEW_STATIC
   #include <GL/glew.h>
+#endif
+
+
+#if !defined(_WIN32) && !defined(__APPLE__)
+    #define GL_GLEXT_PROTOTYPES
+    #include <GL/gl.h>
+    #include <GL/glx.h>
+    #include <GL/glext.h>
 #endif
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 #undef main
-
-#if !defined(_WIN32) && !defined(__APPLE__)
-    #include <GL/gl.h>
-    #include <GL/glx.h>
-#endif
-
-
 #define __CL_ENABLE_EXCEPTIONS
 #include <cl.hpp>
 
@@ -214,14 +215,29 @@ int main(int argc, char *argv[])
     d_velocities = cl::Buffer(context, CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR,
                               4*numBodies*sizeof(float));
 
-    cl::copy(queue, h_initialPositions.begin(), h_initialPositions.end(),
-             d_positions[0]);
-    cl::copy(queue, h_initialVelocities.begin(), h_initialVelocities.end(),
-             d_velocities);
-
+    // Create a Memory list of the CL/GL objects
     std::vector<cl::Memory> clglObjects;
     clglObjects.push_back(d_positions[0]);
     clglObjects.push_back(d_positions[1]);
+
+    if (useGLInterop)
+    {
+      // We have to qcquire the objects from GL before we can copy
+      glFinish();
+      queue.enqueueAcquireGLObjects(&clglObjects);
+      queue.enqueueWriteBuffer(d_positions[0], CL_FALSE, 0, h_initialPositions.size() * sizeof(float), &h_initialPositions[0]);
+      queue.enqueueReleaseGLObjects(&clglObjects);
+      queue.finish();
+    }
+    else
+    {
+      cl::copy(queue, h_initialPositions.begin(), h_initialPositions.end(),
+               d_positions[0]);
+    }
+
+    cl::copy(queue, h_initialVelocities.begin(), h_initialVelocities.end(),
+             d_velocities);
+
 
     std::cout << "OpenCL initialization complete." << std::endl << std::endl;
 
