@@ -14,6 +14,7 @@ Release/
 
 output.bmp
 
+exercises/DeviceInfo/deviceinfo
 exercises/Bilateral/bilateral
 exercises/HostDevTransfer/transfer
 exercises/NBody-GL/nbody

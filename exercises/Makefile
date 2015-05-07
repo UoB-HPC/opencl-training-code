@@ -1,5 +1,6 @@
 
 PROJECTS = \
+	DeviceInfo \
 	Bilateral \
 	HostDevTransfer \
 	NBody \
