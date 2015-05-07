@@ -9,6 +9,9 @@ ipch/
 Debug/
 Release/
 
+*.sublime-project
+*.sublime-workspace
+
 output.bmp
 
 exercises/Bilateral/bilateral
