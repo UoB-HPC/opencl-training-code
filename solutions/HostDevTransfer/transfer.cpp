@@ -15,7 +15,7 @@ void parseArguments(int argc, char *argv[]);
 
 // Benchmark parameters, with default values.
 unsigned deviceIndex   =      0;
-unsigned bufferSize    =    300; // Size in MB
+unsigned bufferSize    =    256; // Size in MB
 unsigned iterations    =     32;
 
 const char *kernel_source =
