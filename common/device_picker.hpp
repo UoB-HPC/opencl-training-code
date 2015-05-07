@@ -29,7 +29,6 @@ unsigned getDeviceList(std::vector<cl::Device>& devices)
   // Enumerate devices
   for (unsigned int i = 0; i < platforms.size(); i++)
   {
-    cl_uint num = 0;
     std::vector<cl::Device> plat_devices;
     platforms[i].getDevices(CL_DEVICE_TYPE_ALL, &plat_devices);
     devices.insert(devices.end(), plat_devices.begin(), plat_devices.end());
