@@ -58,6 +58,6 @@ TODO
 - [x] Add links to IWOCL talks to the outro slides
 - [ ] Remove Bandwidth measurement if test fails
 - [ ] Add note about work-group size on OS X CPU
-- [ ] Fix potential issue with -framework SDL2 in Makefiles?
+- [x] Fix potential issue with -framework SDL2 in Makefiles?
 - [ ] Add conditional recompile in Makefiles
 
