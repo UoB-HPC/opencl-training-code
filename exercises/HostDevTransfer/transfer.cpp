@@ -13,7 +13,7 @@
 
 void parseArguments(int argc, char *argv[]);
 
-// Simulation parameters, with default values.
+// Benchmark parameters, with default values.
 unsigned deviceIndex   =      0;
 unsigned bufferSize    =    256; // Size in MB
 unsigned iterations    =     32;
@@ -21,7 +21,8 @@ unsigned iterations    =     32;
 const char *kernel_source =
 "kernel void fill(global uint *data, uint value)"
 "{"
-"  data[get_global_id(0)] = value*42;"
+"  uint i = get_global_id(0);"
+"  data[i] = value*42 + i;"
 "}";
 
 bool checkOutput(cl_uint *data, cl_uint value)
@@ -32,25 +33,20 @@ bool checkOutput(cl_uint *data, cl_uint value)
   bool pass = true;
   for (unsigned i = 0; i < bufferSize/4; i++)
   {
-    pass &= (data[i] == value*42);
+    pass &= (data[i] == value*42+i);
   }
   return pass;
 }
 
 void runBenchmark(cl::Context& context, cl::CommandQueue& queue,
                   cl::make_kernel<cl::Buffer, cl_uint> fill,
-                  bool useMapped)
+                  cl::Buffer& d_buffer, // device buffer
+                  cl_uint    *h_buffer, // host buffer, ignored for zero-copy
+                  bool zeroCopy)
 {
-  // Create buffer
-  cl::Buffer d_buffer(context,
-                      CL_MEM_READ_WRITE,
-                      bufferSize);
-  cl_uint *h_buffer = new cl_uint[bufferSize/4];
-
-  // Run benchmark
   bool pass = true;
   util::Timer timer;
-  uint64_t readTime = 0;
+  uint64_t transferTime = 0;
   uint64_t startTime = timer.getTimeMicroseconds();
   for (cl_uint i = 0; i < iterations; i++)
   {
@@ -58,44 +54,54 @@ void runBenchmark(cl::Context& context, cl::CommandQueue& queue,
     fill(cl::EnqueueArgs(queue, cl::NDRange(bufferSize/4)), d_buffer, i);
     queue.finish();
 
-    // Read and check data
-    uint64_t startRead = timer.getTimeMicroseconds();
-    if (useMapped)
+    uint64_t startTransfer = timer.getTimeMicroseconds();
+
+    if (zeroCopy)
     {
-      // Implement this for mapped buffers!
-      pass &= checkOutput(NULL, i);
+      // Map device buffer to get host pointer
+      // **** TODO ****
     }
     else
     {
+      // Read data from device buffer to host buffer
       queue.enqueueReadBuffer(d_buffer, CL_TRUE, 0, bufferSize, h_buffer);
-      pass &= checkOutput(h_buffer, i);
     }
-    uint64_t endRead = timer.getTimeMicroseconds();
-    readTime += (endRead - startRead);
+    uint64_t endTransfer = timer.getTimeMicroseconds();
+
+    // Check data
+    pass &= checkOutput(h_buffer, i);
+
+    if (zeroCopy)
+    {
+      // Unmap host pointer
+      // **** TODO ****
+    }
+
+    transferTime += (endTransfer - startTransfer);
   }
   queue.finish();
 
+  // Print stats
   uint64_t endTime  = timer.getTimeMicroseconds();
   double seconds    = (endTime - startTime) * 1e-6;
   double totalBytes = iterations * (double)bufferSize;
-  double bandwidth  = (totalBytes / readTime) * 1e-3;
+  double bandwidth  = (totalBytes / transferTime) * 1e-3;
   std::cout << std::fixed << std::setprecision(2);
-  std::cout << (useMapped ? "Using mapped" : "Not mapped  ");
   if (pass)
   {
-    std::cout << "  " << std::setw(6) << seconds   << "s"
-              << "  " << std::setw(6) << bandwidth << " GB/s";
+    std::cout << "   " << std::setw(6) << seconds   << "s"
+              << "   " << std::setw(7) << transferTime*1e-6 << "s"
+              << "   " << std::setw(8) << bandwidth << " GB/s"
+              << std::endl;
   }
   else
   {
-    std::cout << "  " << std::setw(6) << "-" << "s"
-              << "  " << std::setw(6) << "-" << " GB/s";
+    std::cout << "   " << std::setw(6) << "-" << "s"
+              << "   " << std::setw(7) << "-" << "s"
+              << "   " << std::setw(8) << "-" << " GB/s"
+              << "   FAILED"
+              << std::endl;
   }
-  std::cout << "  " << (pass ? "PASSED" : "FAILED")
-            << std::endl;
-
-  if (!useMapped)
-    delete[] h_buffer;
 }
 
 int main(int argc, char *argv[])
@@ -120,7 +126,13 @@ int main(int argc, char *argv[])
     std::string name = getDeviceName(device);
     std::cout << std::endl << "Using OpenCL device: " << name << std::endl
               << "Buffer size = " << bufferSize << " MB" << std::endl
-              << "Iterations  = " << iterations << std::endl
+              << "Iterations  = " << iterations << std::endl;
+
+    bool unifiedMemory = device.getInfo<CL_DEVICE_HOST_UNIFIED_MEMORY>();
+    std::cout << (unifiedMemory ?
+      "Device has host-unified memory" :
+      "Device does not have host-unified memory")
+              << std::endl
               << std::endl;
 
     // Convert buffer size to bytes
@@ -131,8 +143,48 @@ int main(int argc, char *argv[])
     cl::Program program(context, kernel_source, true);
     cl::make_kernel<cl::Buffer, cl_uint> fill(program, "fill");
 
-    runBenchmark(context, queue, fill, false);
-    runBenchmark(context, queue, fill, true);
+    std::cout << "Type          Total   Transfer       Bandwidth" << std::endl
+              << "----------------------------------------------" << std::endl;
+
+
+    // Baseline - using a regular buffer with enqueueReadBuffer
+    {
+      // Create device buffer
+      cl::Buffer d_buffer(context, CL_MEM_READ_WRITE, bufferSize);
+
+      // Create host buffer
+      cl_uint *h_buffer = new cl_uint[bufferSize/4];
+
+      std::cout << "Baseline ";
+      runBenchmark(context, queue, fill, d_buffer, h_buffer, false);
+
+      delete[] h_buffer;
+    }
+
+    if (unifiedMemory)
+    {
+      // Create a host-accessible device buffer
+      // **** TODO ****
+
+      // No separate host buffer needed
+
+      //std::cout << "Zero-Copy";
+      //runBenchmark(context, queue, fill, d_buffer, NULL, true);
+    }
+    else
+    {
+      // Create device buffer
+      // **** TODO ****
+
+      // Create a pinned host buffer (using a mapped device buffer)
+      // **** TODO ****
+
+      //std::cout << "Pinned   ";
+      //runBenchmark(context, queue, fill, d_buffer, h_pinned, false);
+
+      // Unmap pinned host buffer
+      // **** TODO ****
+    }
   }
   catch (cl::Error err)
   {

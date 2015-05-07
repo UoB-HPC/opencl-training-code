@@ -75,7 +75,7 @@ void runBenchmark(cl::Context& context, cl::CommandQueue& queue,
 
     if (zeroCopy)
     {
-      // Release host pointer
+      // Unmap host pointer
       queue.enqueueUnmapMemObject(d_buffer, h_buffer);
     }
 
