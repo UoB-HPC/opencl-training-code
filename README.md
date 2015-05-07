@@ -44,6 +44,15 @@ There is a Makefile in each project directory, and global ones in the `exercises
 To change the compiler from the default C++ compiler set the `CXX` variable; for example `make CXX=icpc`.
 
 
+Notes
+=====
+
+NBody solution
+--------------
+
+On OS X, when running on the CPU you will need to select `--wgsize 1` at the command line.
+We expect 8 incorrect values.
+
 TODO
 ====
 - [x] Merge pre-existing conflict for 'part2' slides (there's an 'sms' version)
@@ -57,7 +66,7 @@ TODO
 - [ ] Update intro with correct path to all course material
 - [x] Add links to IWOCL talks to the outro slides
 - [ ] Remove Bandwidth measurement if test fails
-- [ ] Add note about work-group size on OS X CPU
+- [x] Add note about work-group size on OS X CPU
 - [x] Fix potential issue with -framework SDL2 in Makefiles?
 - [x] Add conditional recompile in Makefiles
 
