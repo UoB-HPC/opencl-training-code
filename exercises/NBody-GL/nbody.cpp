@@ -67,7 +67,6 @@ int main(int argc, char *argv[])
     // Initialize host data
     std::vector<float> h_initialPositions(4*numBodies);
     std::vector<float> h_initialVelocities(4*numBodies, 0);
-    float *h_positions = NULL;
     for (unsigned i = 0; i < numBodies; i++)
     {
       if (init2D)
