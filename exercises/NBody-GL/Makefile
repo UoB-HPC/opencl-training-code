@@ -6,12 +6,11 @@ endif
 
 INC = ../../common
 FLAGS = -O3
-LIBS = -lm
-LDFLAGS = -lOpenCL -lGL
+LDFLAGS = -lm -lOpenCL -lGL
 
 PLATFORM = $(shell uname -s)
 ifeq ($(PLATFORM), Darwin)
-	LDFLAGS = -framework OpenCL -framework OpenGL -framework CoreGraphics
+	LDFLAGS = -lm -framework OpenCL -framework OpenGL -framework CoreGraphics
 endif
 
 SDL = $(shell sdl2-config --cflags --libs)
@@ -20,7 +19,7 @@ SRC = nbody.cpp
 EXE = nbody
 
 all:
-	$(CXX) $(FLAGS) -I $(INC) $(SRC) $(LIBS) $(LDFLAGS) $(SDL) -o $(EXE)
+	$(CXX) $(FLAGS) -I $(INC) $(SRC) $(LDFLAGS) $(SDL) -o $(EXE)
 
 clean:
 	rm -f $(EXE)

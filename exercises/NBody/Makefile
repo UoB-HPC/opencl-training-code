@@ -6,18 +6,18 @@ endif
 
 INC = ../../common
 FLAGS = -O3
-LIBS = -lOpenCL
+LDFLAGS = -lOpenCL
 
 PLATFORM = $(shell uname -s)
 ifeq ($(PLATFORM), Darwin)
-	LIBS = -framework OpenCL
+	LDFLAGS = -framework OpenCL
 endif
 
 SRC = nbody.cpp
 EXE = nbody
 
 all:
-	$(CXX) $(FLAGS) -I $(INC) $(SRC) $(LIBS) -o $(EXE)
+	$(CXX) $(FLAGS) -I $(INC) $(SRC) $(LDFLAGS) -o $(EXE)
 
 clean:
 	rm -f $(EXE)
