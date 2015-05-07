@@ -11,16 +11,21 @@ LDFLAGS = -lOpenCL -lGL
 
 PLATFORM = $(shell uname -s)
 ifeq ($(PLATFORM), Darwin)
-	LDFLAGS = -framework OpenCL -framework OpenGL -framework CoreGraphics
+	LDFLAGS = -lm -framework OpenCL -framework OpenGL -framework CoreGraphics
+	ifeq ($(shell which sdl2-config > /dev/null; echo $$?), 0)
+		LDFLAGS += $(shell sdl2-config --cflags --libs)
+	else
+		LDFLAGS += -framework SDL2
+	endif
+else
+	LDFLAGS += $(shell sdl2-config --cflags --libs)
 endif
-
-SDL = $(shell sdl2-config --cflags --libs)
 
 SRC = nbody.cpp
 EXE = nbody
 
 all:
-	$(CXX) $(FLAGS) -I $(INC) $(SRC) $(LIBS) $(LDFLAGS) $(SDL) -o $(EXE)
+	$(CXX) $(FLAGS) -I $(INC) $(SRC) $(LIBS) $(LDFLAGS) -o $(EXE)
 
 clean:
 	rm -f $(EXE)
