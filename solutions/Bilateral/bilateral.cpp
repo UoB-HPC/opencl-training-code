@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 
     cl::Device device = devices[deviceIndex];
 
-    std::string name = device.getInfo<CL_DEVICE_NAME>();
+    std::string name = getDeviceName(device);
     std::cout << std::endl << "Using OpenCL device: " << name << std::endl
               << std::endl;
 
@@ -229,8 +229,7 @@ void parseArguments(int argc, char *argv[])
         std::cout << "Devices:" << std::endl;
         for (unsigned i = 0; i < devices.size(); i++)
         {
-          std::string name = devices[i].getInfo<CL_DEVICE_NAME>();
-          std::cout << i << ": " << name << std::endl;
+          std::cout << i << ": " << getDeviceName(devices[i]) << std::endl;
         }
         std::cout << std::endl;
       }

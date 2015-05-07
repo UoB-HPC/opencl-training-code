@@ -41,8 +41,9 @@ unsigned getDeviceList(std::vector<cl::Device>& devices)
   return devices.size();
 }
 
-void getDeviceName(cl::Device& device, std::string& name)
+std::string getDeviceName(const cl::Device& device)
 {
+  std::string name;
   cl_device_info info = CL_DEVICE_NAME;
 
   // Special case for AMD
@@ -53,6 +54,7 @@ void getDeviceName(cl::Device& device, std::string& name)
 #endif
 
   device.getInfo(info, &name);
+  return name;
 }
 
 
@@ -83,9 +85,7 @@ void parseArguments(int argc, char *argv[], cl_uint *deviceIndex)
         std::cout << "\nDevices:\n";
         for (unsigned int i = 0; i < numDevices; i++)
         {
-          std::string name;
-          getDeviceName(devices[i], name);
-          std::cout << i << ": " << name << "\n";
+          std::cout << i << ": " << getDeviceName(devices[i]) << "\n";
         }
         std::cout << "\n";
       }
