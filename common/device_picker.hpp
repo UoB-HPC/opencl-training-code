@@ -17,6 +17,10 @@
 #include <err_code.h>
 #include <iostream>
 
+#ifndef CL_DEVICE_BOARD_NAME_AMD
+#define CL_DEVICE_BOARD_NAME_AMD 0x4038
+#endif
+
 #define MAX_INFO_STRING 256
 
 
