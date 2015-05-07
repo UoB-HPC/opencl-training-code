@@ -59,5 +59,5 @@ TODO
 - [ ] Remove Bandwidth measurement if test fails
 - [ ] Add note about work-group size on OS X CPU
 - [x] Fix potential issue with -framework SDL2 in Makefiles?
-- [ ] Add conditional recompile in Makefiles
+- [x] Add conditional recompile in Makefiles
 

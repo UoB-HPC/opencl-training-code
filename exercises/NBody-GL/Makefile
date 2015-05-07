@@ -23,7 +23,7 @@ endif
 SRC = nbody.cpp
 EXE = nbody
 
-all:
+$(EXE): $(SRC)
 	$(CXX) $(FLAGS) -I $(INC) $(SRC) $(LDFLAGS) -o $(EXE)
 
 clean:

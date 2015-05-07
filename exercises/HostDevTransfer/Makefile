@@ -16,7 +16,7 @@ endif
 SRC = transfer.cpp
 EXE = transfer
 
-all:
+$(EXE): $(SRC)
 	$(CXX) $(FLAGS) -I $(INC) $(SRC) $(LDFLAGS) -o $(EXE)
 
 clean:

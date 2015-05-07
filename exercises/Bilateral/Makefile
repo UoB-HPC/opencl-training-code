@@ -23,7 +23,7 @@ endif
 SRC = bilateral.cpp
 EXE = bilateral
 
-all:
+$(EXE): $(SRC)
 	$(CXX) $(FLAGS) -I $(INC) $(SRC) $(LDFLAGS) -o $(EXE)
 
 clean:
