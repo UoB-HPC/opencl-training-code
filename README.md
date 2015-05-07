@@ -65,7 +65,7 @@ TODO
 - [x] Remove native functions in Bilaterial exercise
 - [ ] Update intro with correct path to all course material
 - [x] Add links to IWOCL talks to the outro slides
-- [ ] Remove Bandwidth measurement if test fails
+- [x] Remove Bandwidth measurement if test fails
 - [x] Add note about work-group size on OS X CPU
 - [x] Fix potential issue with -framework SDL2 in Makefiles?
 - [x] Add conditional recompile in Makefiles

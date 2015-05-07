@@ -80,10 +80,18 @@ void runBenchmark(cl::Context& context, cl::CommandQueue& queue,
   double totalBytes = iterations * (double)bufferSize;
   double bandwidth  = (totalBytes / readTime) * 1e-3;
   std::cout << std::fixed << std::setprecision(2);
-  std::cout << (useMapped ? "Using mapped" : "Not mapped  ")
-            << "  " << std::setw(6) << seconds   << "s"
-            << "  " << std::setw(6) << bandwidth << " GB/s"
-            << "  " << (pass ? "PASSED" : "FAILED")
+  std::cout << (useMapped ? "Using mapped" : "Not mapped  ");
+  if (pass)
+  {
+    std::cout << "  " << std::setw(6) << seconds   << "s"
+              << "  " << std::setw(6) << bandwidth << " GB/s";
+  }
+  else
+  {
+    std::cout << "  " << std::setw(6) << "-" << "s"
+              << "  " << std::setw(6) << "-" << " GB/s";
+  }
+  std::cout << "  " << (pass ? "PASSED" : "FAILED")
             << std::endl;
 
   if (!useMapped)
