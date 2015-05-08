@@ -53,11 +53,11 @@ int main(void)
         dev->getInfo(CL_DEVICE_OPENCL_C_VERSION, &s);
         std::cout << "\t\tVersion: " << s << std::endl;
 
-        int i;
+        cl_uint i;
         dev->getInfo(CL_DEVICE_MAX_COMPUTE_UNITS, &i);
         std::cout << "\t\tMax. Compute Units: " << i << std::endl;
 
-        size_t size;
+        cl_ulong size;
         dev->getInfo(CL_DEVICE_LOCAL_MEM_SIZE, &size);
         std::cout << "\t\tLocal Memory Size: " << size/1024 << " KB" << std::endl;
 
@@ -67,8 +67,9 @@ int main(void)
         dev->getInfo(CL_DEVICE_MAX_MEM_ALLOC_SIZE, &size);
         std::cout << "\t\tMax Alloc Size: " << size/(1024*1024) << " MB" << std::endl;
 
-        dev->getInfo(CL_DEVICE_MAX_WORK_GROUP_SIZE, &size);
-        std::cout << "\t\tMax Work-group Total Size: " << size << std::endl;
+        size_t maxWGSize;
+        dev->getInfo(CL_DEVICE_MAX_WORK_GROUP_SIZE, &maxWGSize);
+        std::cout << "\t\tMax Work-group Total Size: " << maxWGSize << std::endl;
 
         std::vector<size_t> d;
         dev->getInfo(CL_DEVICE_MAX_WORK_ITEM_SIZES, &d);
