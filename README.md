@@ -63,7 +63,7 @@ TODO
 - [ ] Instructions for using HP server and Zoo
 - [x] Add deps to part 1 slides
 - [x] Remove native functions in Bilaterial exercise
-- [ ] Update intro with correct path to all course material
+- [x] Update intro with correct path to all course material
 - [x] Add links to IWOCL talks to the outro slides
 - [x] Remove Bandwidth measurement if test fails
 - [x] Add note about work-group size on OS X CPU
