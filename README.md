@@ -60,7 +60,7 @@ TODO
 - [ ] Add zero-copy transfer to Host<->Device transfer exercise + slides
 - [x] Sort out Visual Studio solutions (try using VS 2010)
 - [x] Add Unix Makefiles
-- [ ] Instructions for using HP server and Zoo
+- [x] Instructions for using HP server and Zoo
 - [x] Add deps to part 1 slides
 - [x] Remove native functions in Bilaterial exercise
 - [x] Update intro with correct path to all course material
