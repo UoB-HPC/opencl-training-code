@@ -56,8 +56,8 @@ We expect 8 incorrect values.
 TODO
 ====
 - [x] Merge pre-existing conflict for 'part2' slides (there's an 'sms' version)
-- [ ] Update Host<->Device transfer exercise + slides with proper pinned mem approach
-- [ ] Add zero-copy transfer to Host<->Device transfer exercise + slides
+- [x] Update Host<->Device transfer exercise + slides with proper pinned mem approach
+- [x] Add zero-copy transfer to Host<->Device transfer exercise + slides
 - [x] Sort out Visual Studio solutions (try using VS 2010)
 - [x] Add Unix Makefiles
 - [ ] Instructions for using HP server and Zoo
