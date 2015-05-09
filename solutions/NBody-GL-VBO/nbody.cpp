@@ -63,7 +63,7 @@ cl_uint  windowHeight  =    480;
 // SDL/GL objects
 SDL_Window    *window;
 SDL_GLContext  contextGL;
-struct
+static struct
 {
   GLuint program;
   GLuint positions[2];
