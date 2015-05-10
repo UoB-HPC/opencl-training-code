@@ -3,6 +3,7 @@
 //
 
 #include <cmath>
+#include <iomanip>
 #include <iostream>
 #include <vector>
 
@@ -137,8 +138,17 @@ int main(int argc, char *argv[])
     cl::copy(queue, d_positionsIn, h_positions.begin(), h_positions.end());
 
     endTime = timer.getTimeMicroseconds();
-    std::cout << "OpenCL took " << ((endTime-startTime)*1e-3) << "ms"
-              << std::endl << std::endl;
+    uint64_t microseconds = (endTime-startTime);
+    std::cout << std::setprecision(2) << std::fixed;
+    std::cout << "OpenCL took " << (microseconds*1e-3) << "ms"
+              << std::endl;
+
+    long interactions = iterations * numBodies * numBodies;
+    double giPerSec = interactions/(double)(microseconds*1e-6) * 1e-9;
+    std::cout << giPerSec
+              << " billion interactions/second" << std::endl;
+
+    std::cout << std::endl;
 
 
     // Run reference code
