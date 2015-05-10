@@ -2,11 +2,11 @@
 
 float4 computeForce(float4 ipos, float4 jpos, float softening)
 {
-  float4 d      = jpos - ipos;
-         d.w    = 0;
-  float  distSq = d.x*d.x + d.y*d.y + d.z*d.z + softening*softening;
-  float  dist   = sqrt(distSq);
-  float  coeff  = jpos.w / (dist*dist*dist);
+  float4 d       = jpos - ipos;
+         d.w     = 0;
+  float  distSq  = d.x*d.x + d.y*d.y + d.z*d.z + softening*softening;
+  float  invdist = native_rsqrt(distSq);
+  float  coeff   = jpos.w * (invdist*invdist*invdist);
   return coeff * d;
 }
 
