@@ -30,6 +30,7 @@ cl_float softening     =      0.05f;
 cl_uint  iterations    =     32;
 float    sphereRadius  =    0.8f;
 float    tolerance     =      0.01f;
+unsigned wgsize        =     64;
 
 int main(int argc, char *argv[])
 {
@@ -119,9 +120,10 @@ int main(int argc, char *argv[])
     std::cout << "Running simulation..." << std::endl;
     startTime = timer.getTimeMicroseconds();
     cl::NDRange global(numBodies);
+    cl::NDRange local(wgsize);
     for (unsigned i = 0; i < iterations; i++)
     {
-      nbodyKernel(cl::EnqueueArgs(queue, global),
+      nbodyKernel(cl::EnqueueArgs(queue, global, local),
                   d_positionsIn, d_positionsOut, d_velocities,
                   numBodies, delta, softening);
 
@@ -282,6 +284,14 @@ void parseArguments(int argc, char *argv[])
         exit(1);
       }
     }
+    else if (!strcmp(argv[i], "--wgsize"))
+    {
+      if (++i >= argc || !parseUInt(argv[i], &wgsize))
+      {
+        std::cout << "Invalid work-group size" << std::endl;
+        exit(1);
+      }
+    }
     else if (!strcmp(argv[i], "--help") || !strcmp(argv[i], "-h"))
     {
       std::cout << std::endl;
@@ -294,6 +304,7 @@ void parseArguments(int argc, char *argv[])
       std::cout << "  -d  --delta      DELTA   Time difference between iterations" << std::endl;
       std::cout << "  -s  --softening  SOFT    Force softening factor" << std::endl;
       std::cout << "  -i  --iterations ITRS    Run simulation for ITRS iterations" << std::endl;
+      std::cout << "      --wgsize     WGSIZE  Set work-group size to WGSIZE" << std::endl;
       std::cout << std::endl;
       exit(0);
     }

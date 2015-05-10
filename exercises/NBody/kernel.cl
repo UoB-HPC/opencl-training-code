@@ -18,26 +18,40 @@ kernel void nbody(global float4 *positionsIn,
                   const  float   softening)
 {
   uint i       = get_global_id(0);
+  uint lid     = get_local_id(0);
   float4 ipos  = positionsIn[i];
+
+  uint wgsize = get_local_size(0);
+
+  // Allocated the most local memory we might need
+  // Would be better if the compiler knew the work-group size...
+  local float4 scratch[1024];
 
   // Compute force
   float4 force = 0.f;
-  for (uint j = 0; j < numBodies;)
+  for (uint j = 0; j < numBodies; j+=wgsize)
   {
-    force += computeForce(ipos, positionsIn[j++], softening);
+    barrier(CLK_LOCAL_MEM_FENCE);
+    scratch[lid] = positionsIn[j + lid];
+    barrier(CLK_LOCAL_MEM_FENCE);
+
+    for (uint k = 0; k < wgsize;)
+    {
+      force += computeForce(ipos, scratch[k++], softening);
 #if UNROLL_FACTOR >= 2
-    force += computeForce(ipos, positionsIn[j++], softening);
+      force += computeForce(ipos, scratch[k++], softening);
 #endif
 #if UNROLL_FACTOR >= 4
-    force += computeForce(ipos, positionsIn[j++], softening);
-    force += computeForce(ipos, positionsIn[j++], softening);
+      force += computeForce(ipos, scratch[k++], softening);
+      force += computeForce(ipos, scratch[k++], softening);
 #endif
 #if UNROLL_FACTOR >= 8
-    force += computeForce(ipos, positionsIn[j++], softening);
-    force += computeForce(ipos, positionsIn[j++], softening);
-    force += computeForce(ipos, positionsIn[j++], softening);
-    force += computeForce(ipos, positionsIn[j++], softening);
+      force += computeForce(ipos, scratch[k++], softening);
+      force += computeForce(ipos, scratch[k++], softening);
+      force += computeForce(ipos, scratch[k++], softening);
+      force += computeForce(ipos, scratch[k++], softening);
 #endif
+    }
   }
 
   // Update velocity
