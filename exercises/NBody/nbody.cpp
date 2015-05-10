@@ -25,10 +25,10 @@ void     runReference(const std::vector<float>& initialPositions,
 // Simulation parameters, with default values.
 cl_uint  deviceIndex   =      0;
 cl_uint  numBodies     =   4096;
-cl_float delta         =      0.005f;
-cl_float softening     =      0.001f;
-cl_uint  iterations    =     16;
-float    sphereRadius  =    128;
+cl_float delta         =      0.0002f;
+cl_float softening     =      0.05f;
+cl_uint  iterations    =     32;
+float    sphereRadius  =    0.8f;
 float    tolerance     =      0.01f;
 
 int main(int argc, char *argv[])
@@ -344,7 +344,8 @@ void runReference(const std::vector<float>& initialPositions,
         float dist  = sqrt(dx*dx + dy*dy + dz*dz + softening*softening);
 
         // Compute interaction force
-        float coeff = jw / (dist*dist*dist);
+        float invdist = 1.f / dist;
+        float coeff = jw * (invdist*invdist*invdist);
         fx         += coeff * dx;
         fy         += coeff * dy;
         fz         += coeff * dz;
