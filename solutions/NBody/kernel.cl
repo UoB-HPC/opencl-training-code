@@ -8,6 +8,7 @@ float4 computeForce(float4 ipos, float4 jpos)
   return coeff * d;
 }
 
+__attribute__((reqd_work_group_size(WGSIZE, 1, 1)))
 kernel void nbody(global const float4 * restrict positionsIn,
                   global       float4 * restrict positionsOut,
                   global       float4 * restrict velocities,
