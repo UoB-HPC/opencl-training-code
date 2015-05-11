@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
     std::cout << "OpenCL took " << (microseconds*1e-3) << "ms"
               << std::endl;
 
-    long interactions = iterations * numBodies * numBodies;
+    long interactions = (long)iterations * (long)numBodies * (long)numBodies;
     double giPerSec = interactions/(double)(microseconds*1e-6) * 1e-9;
     std::cout << giPerSec
               << " billion interactions/second" << std::endl;

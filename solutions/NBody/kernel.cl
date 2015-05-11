@@ -18,32 +18,42 @@ kernel void nbody(global const float4 * restrict positionsIn,
   uint lid     = get_local_id(0);
   float4 ipos  = positionsIn[i];
 
+#ifdef USE_LOCAL
   local float4 scratch[WGSIZE];
+  #define READ_POS(j, k) (scratch[k])
+#else
+  #define READ_POS(j, k) (positionsIn[(j) + (k)])
+#endif
 
   // Compute force
   float4 force = 0.f;
+
   for (uint j = 0; j < numBodies; j+=WGSIZE)
   {
+#ifdef USE_LOCAL
     barrier(CLK_LOCAL_MEM_FENCE);
     scratch[lid] = positionsIn[j + lid];
     barrier(CLK_LOCAL_MEM_FENCE);
+#endif
 
     for (uint k = 0; k < WGSIZE;)
     {
-      force += computeForce(ipos, scratch[k++]);
+
+      force += computeForce(ipos, READ_POS(j, k++));
 #if UNROLL_FACTOR >= 2
-      force += computeForce(ipos, scratch[k++]);
+      force += computeForce(ipos, READ_POS(j, k++));
 #endif
 #if UNROLL_FACTOR >= 4
-      force += computeForce(ipos, scratch[k++]);
-      force += computeForce(ipos, scratch[k++]);
+      force += computeForce(ipos, READ_POS(j, k++));
+      force += computeForce(ipos, READ_POS(j, k++));
 #endif
 #if UNROLL_FACTOR >= 8
-      force += computeForce(ipos, scratch[k++]);
-      force += computeForce(ipos, scratch[k++]);
-      force += computeForce(ipos, scratch[k++]);
-      force += computeForce(ipos, scratch[k++]);
+      force += computeForce(ipos, READ_POS(j, k++));
+      force += computeForce(ipos, READ_POS(j, k++));
+      force += computeForce(ipos, READ_POS(j, k++));
+      force += computeForce(ipos, READ_POS(j, k++));
 #endif
+
     }
   }
 

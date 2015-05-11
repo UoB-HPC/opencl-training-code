@@ -34,6 +34,7 @@ float    sphereRadius  =    0.8f;
 float    tolerance     =      0.01f;
 unsigned unrollFactor  =      1;
 unsigned wgsize        =     64;
+bool     useLocal      =     false;
 
 int main(int argc, char *argv[])
 {
@@ -88,6 +89,8 @@ int main(int argc, char *argv[])
       options << " -Ddelta=" << delta << "f";
       options << " -DUNROLL_FACTOR=" << unrollFactor;
       options << " -DWGSIZE=" << wgsize;
+      if (useLocal)
+        options << " -DUSE_LOCAL";
       program.build(options.str().c_str());
     }
     catch (cl::Error error)
@@ -152,7 +155,7 @@ int main(int argc, char *argv[])
     std::cout << "OpenCL took " << (microseconds*1e-3) << "ms"
               << std::endl;
 
-    long interactions = iterations * numBodies * numBodies;
+    long interactions = (long)iterations * (long)numBodies * (long)numBodies;
     double giPerSec = interactions/(double)(microseconds*1e-6) * 1e-9;
     std::cout << giPerSec
               << " billion interactions/second" << std::endl;
@@ -318,6 +321,10 @@ void parseArguments(int argc, char *argv[])
         std::cout << "Invalid work-group size" << std::endl;
         exit(1);
       }
+    }
+    else if (!strcmp(argv[i], "--local"))
+    {
+      useLocal = true;
     }
     else if (!strcmp(argv[i], "--help") || !strcmp(argv[i], "-h"))
     {
