@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     // Initialize host data
     std::vector<float> h_initialPositions(4*numBodies);
     std::vector<float> h_initialVelocities(4*numBodies, 0);
-    float *h_positions = NULL;
+    std::vector<float> h_positions(4*numBodies);
     for (unsigned i = 0; i < numBodies; i++)
     {
       // Generate a random point on the surface of a sphere
@@ -144,8 +144,7 @@ int main(int argc, char *argv[])
     }
 
     // Read final positions
-    h_positions = (float*)queue.enqueueMapBuffer(
-      d_positionsIn, CL_TRUE, CL_MAP_READ, 0, 4*numBodies*sizeof(float));
+    cl::copy(queue, d_positionsIn, h_positions.begin(), h_positions.end());
 
     endTime = timer.getTimeMicroseconds();
     uint64_t microseconds = (endTime-startTime);
@@ -211,8 +210,6 @@ int main(int argc, char *argv[])
       std::cout << "Verification passed." << std::endl;
     }
     std::cout << std::endl;
-
-    queue.enqueueUnmapMemObject(d_positionsIn, h_positions);
   }
   catch (cl::Error err)
   {
