@@ -54,8 +54,8 @@ cl_float softening     =      0.05f;
 cl_uint  iterations    =     16;
 float    sphereRadius  =    0.8f;
 float    tolerance     =      0.01f;
-unsigned unrollFactor  =      1;
 unsigned wgsize        =     16;
+bool     useLocal      =     false;
 unsigned init2D        =      0;
 cl_uint  windowWidth   =    640;
 cl_uint  windowHeight  =    480;
@@ -155,8 +155,9 @@ int main(int argc, char *argv[])
       options << " -cl-single-precision-constant";
       options << " -Dsoftening=" << softening << "f";
       options << " -Ddelta=" << delta << "f";
-      options << " -DUNROLL_FACTOR=" << unrollFactor;
       options << " -DWGSIZE=" << wgsize;
+      if (useLocal)
+        options << " -DUSE_LOCAL";
       program.build(options.str().c_str());
     }
     catch (cl::Error error)
@@ -548,14 +549,6 @@ void parseArguments(int argc, char *argv[])
         exit(1);
       }
     }
-    else if (!strcmp(argv[i], "--unroll") || !strcmp(argv[i], "-u"))
-    {
-      if (++i >= argc || !parseUInt(argv[i], &unrollFactor))
-      {
-        std::cout << "Invalid unroll factor" << std::endl;
-        exit(1);
-      }
-    }
     else if (!strcmp(argv[i], "--wgsize"))
     {
       if (++i >= argc || !parseUInt(argv[i], &wgsize))
@@ -563,6 +556,10 @@ void parseArguments(int argc, char *argv[])
         std::cout << "Invalid work-group size" << std::endl;
         exit(1);
       }
+    }
+    else if (!strcmp(argv[i], "--local"))
+    {
+      useLocal = true;
     }
     else if (!strcmp(argv[i], "--help") || !strcmp(argv[i], "-h"))
     {
@@ -576,7 +573,7 @@ void parseArguments(int argc, char *argv[])
       std::cout << "  -d  --delta      DELTA   Time difference between iterations" << std::endl;
       std::cout << "  -s  --softening  SOFT    Force softening factor" << std::endl;
       std::cout << "  -i  --iterations ITRS    Run simulation for ITRS iterations" << std::endl;
-      std::cout << "  -u  --unroll     UNROLL  Unroll factor" << std::endl;
+      std::cout << "      --local              Enable use of local memory" << std::endl;
       std::cout << "      --wgsize     WGSIZE  Set work-group size to WGSIZE" << std::endl;
       std::cout << std::endl;
       exit(0);

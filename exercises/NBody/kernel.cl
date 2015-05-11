@@ -1,5 +1,3 @@
-#define UNROLL_FACTOR 1
-
 float4 computeForce(float4 ipos, float4 jpos, float softening)
 {
   float4 d       = jpos - ipos;
@@ -35,22 +33,9 @@ kernel void nbody(global float4 *positionsIn,
     scratch[lid] = positionsIn[j + lid];
     barrier(CLK_LOCAL_MEM_FENCE);
 
-    for (uint k = 0; k < wgsize;)
+    for (uint k = 0; k < wgsize; k++)
     {
-      force += computeForce(ipos, scratch[k++], softening);
-#if UNROLL_FACTOR >= 2
-      force += computeForce(ipos, scratch[k++], softening);
-#endif
-#if UNROLL_FACTOR >= 4
-      force += computeForce(ipos, scratch[k++], softening);
-      force += computeForce(ipos, scratch[k++], softening);
-#endif
-#if UNROLL_FACTOR >= 8
-      force += computeForce(ipos, scratch[k++], softening);
-      force += computeForce(ipos, scratch[k++], softening);
-      force += computeForce(ipos, scratch[k++], softening);
-      force += computeForce(ipos, scratch[k++], softening);
-#endif
+      force += computeForce(ipos, scratch[k], softening);
     }
   }
 
