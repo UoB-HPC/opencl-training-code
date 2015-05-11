@@ -4,7 +4,8 @@ PROJECTS = \
 	Bilateral \
 	HostDevTransfer \
 	NBody \
-	NBody-GL
+	NBody-GL \
+	NBody-GL-VBO
 
 
 all:
