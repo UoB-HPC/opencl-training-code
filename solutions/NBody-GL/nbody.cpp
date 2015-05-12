@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
       // Release texture back to GL
       // **************************
       queue.enqueueReleaseGLObjects(&clglObjects);
-      queue.flush();
+      queue.finish();
 
       // Render the texture as a quad filling the window
       glEnable(GL_TEXTURE_2D);

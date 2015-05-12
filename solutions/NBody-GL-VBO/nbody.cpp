@@ -271,7 +271,7 @@ int main(int argc, char *argv[])
       // **************************
       if (useGLInterop)
         queue.enqueueReleaseGLObjects(&clglObjects);
-      queue.flush();
+      queue.finish();
 
       // Manually copy data into GL vertex buffer if we don't have GL interop
       if (!useGLInterop)
