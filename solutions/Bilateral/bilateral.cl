@@ -1,3 +1,13 @@
+/*
+ *
+ * This code is released under the "attribution CC BY" creative commons license.
+ * In other words, you can use it in any way you see fit, including commercially,
+ * but please retain an attribution for the original authors:
+ * the High Performance Computing Group at the University of Bristol.
+ * Contributors include Simon McIntosh-Smith, James Price, Tom Deakin and Mike O'Connor.
+ *
+ */
+
 const sampler_t sampler =
   CLK_NORMALIZED_COORDS_FALSE |
   CLK_ADDRESS_CLAMP_TO_EDGE   |
