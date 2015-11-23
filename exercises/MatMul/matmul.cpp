@@ -23,8 +23,7 @@
 
 #include "matmul.hpp"
 #include "matrix_lib.hpp"
-#include "util.hpp"
-#include <err_code.h>
+#include <util.hpp>
 #include "device_picker.hpp"
 
 void buildProgram(cl::Program& program, cl::Device& device);
@@ -72,8 +71,7 @@ int main(int argc, char *argv[])
 
         cl::Device device = devices[deviceIndex];
 
-        std::string name;
-        getDeviceName(device, name);
+        std::string name = getDeviceName(device);
         std::cout << "\nUsing OpenCL device: " << name << "\n";
 
         std::vector<cl::Device> chosen_device;
