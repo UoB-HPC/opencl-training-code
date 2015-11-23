@@ -15,13 +15,14 @@ History: Written by Tim Mattson, 11/99.
 
 */
 
-#include "util.hpp"
-
 #include <cstdio>
 static long num_steps = 100000000;
 double step;
-extern double wtime();   // returns time since some fixed past point (wtime.c)
 
+
+#define __CL_ENABLE_EXCEPTIONS
+#include <cl.hpp>
+#include <util.hpp>
 
 int main ()
 {
