@@ -8,6 +8,10 @@
 
 PROJECTS = \
 	DeviceInfo \
+	VAdd-C \
+	VAdd \
+	MatMul \
+	Pi \
 	Bilateral \
 	HostDevTransfer \
 	NBody \
