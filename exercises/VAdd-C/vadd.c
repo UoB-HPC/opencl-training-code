@@ -31,8 +31,6 @@
 #endif
 
 
-extern double wtime();       // returns time since some fixed past point (wtime.c)
-
 //------------------------------------------------------------------------------
 
 #define TOL    (0.001)   // tolerance used in floating point comparisons
@@ -183,8 +181,6 @@ int main(int argc, char** argv)
     err |= clSetKernelArg(ko_vadd, 3, sizeof(unsigned int), &count);
     checkError(err, "Setting kernel arguments");
 
-    double rtime = wtime();
-
     // Execute the kernel over the entire range of our 1d input data set
     // letting the OpenCL runtime choose the work-group size
     global = count;
@@ -194,9 +190,6 @@ int main(int argc, char** argv)
     // Wait for the commands to complete before stopping the timer
     err = clFinish(commands);
     checkError(err, "Waiting for kernel to finish");
-
-    rtime = wtime() - rtime;
-    printf("\nThe kernel ran in %lf seconds\n",rtime);
 
     // Read back the results from the compute device
     err = clEnqueueReadBuffer( commands, d_c, CL_TRUE, 0, sizeof(float) * count, h_c, 0, NULL, NULL );  
