@@ -71,10 +71,14 @@ int main(int argc, char** argv)
     float*       h_b = (float*) calloc(LENGTH, sizeof(float));       // b vector
     float*       h_c = (float*) calloc(LENGTH, sizeof(float));       // c vector (a+b) returned from the compute device
 
+	float tmp;
     unsigned int correct;           // number of correct results
 
     size_t global;                  // global domain size
 
+	char             name[256];
+	cl_uint          numPlatforms;
+	cl_platform_id  *platforms;
     cl_device_id     device_id;     // compute device id
     cl_context       context;       // compute context
     cl_command_queue commands;      // compute command queue
@@ -93,10 +97,6 @@ int main(int argc, char** argv)
         h_b[i] = rand() / (float)RAND_MAX;
     }
 
-    // Set up platform and GPU device
-
-    cl_uint numPlatforms;
-
     // Find number of platforms
     err = clGetPlatformIDs(0, NULL, &numPlatforms);
     checkError(err, "Finding platforms");
@@ -107,7 +107,7 @@ int main(int argc, char** argv)
     }
 
     // Get all platforms
-    cl_platform_id *platforms = malloc(numPlatforms*sizeof(cl_platform_id));
+    platforms = malloc(numPlatforms*sizeof(cl_platform_id));
     err = clGetPlatformIDs(numPlatforms, platforms, NULL);
     checkError(err, "Getting platforms");
 
@@ -124,7 +124,6 @@ int main(int argc, char** argv)
     if (device_id == NULL)
         checkError(err, "Finding a device");
 
-	char name[256];
 	clGetDeviceInfo(device_id, CL_DEVICE_NAME, 256, name, NULL);
 	printf("Using device: %s\n", name);
 
@@ -201,7 +200,6 @@ int main(int argc, char** argv)
 
     // Test the results
     correct = 0;
-    float tmp;
 
     for(i = 0; i < count; i++)
     {
