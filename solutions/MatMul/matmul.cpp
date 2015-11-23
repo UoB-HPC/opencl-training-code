@@ -13,7 +13,7 @@
 //  USAGE:   The matrices are constant matrices, square and the order is
 //           set as a constant, ORDER (see mult.h).
 //
-//  HISTORY: Written by Tim Mattson, August 2010 
+//  HISTORY: Written by Tim Mattson, August 2010
 //           Modified by Simon McIntosh-Smith, September 2011
 //           Modified by Tom Deakin and Simon McIntosh-Smith, October 2012
 //           Updated to C++ Wrapper v1.2.6 by Tom Deakin, August 2013
@@ -23,8 +23,7 @@
 
 #include "matmul.hpp"
 #include "matrix_lib.hpp"
-#include "util.hpp"
-#include "err_code.h"
+#include <util.hpp>
 #include "device_picker.hpp"
 
 void buildProgram(cl::Program& program, cl::Device& device);
@@ -55,8 +54,8 @@ int main(int argc, char *argv[])
 //--------------------------------------------------------------------------------
 
     try
-    {   
- 
+    {
+
         cl_uint deviceIndex = 0;
         parseArguments(argc, argv, &deviceIndex);
 
@@ -73,8 +72,7 @@ int main(int argc, char *argv[])
 
         cl::Device device = devices[deviceIndex];
 
-        std::string name;
-        getDeviceName(device, name);
+        std::string name = getDeviceName(device);
         std::cout << "\nUsing OpenCL device: " << name << "\n";
 
         std::vector<cl::Device> chosen_device;
