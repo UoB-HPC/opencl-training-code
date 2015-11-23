@@ -59,8 +59,11 @@ int main(void)
     	// Create a context
         cl::Context context(DEVICE);
 
-        // Load in kernel source, creating a program object for the context
+        cl::Device device = context.getInfo<CL_CONTEXT_DEVICES>()[0];
+        std::cout << std::endl << "Using OpenCL device: "
+                  << device.getInfo<CL_DEVICE_NAME>() << std::endl;
 
+        // Load in kernel source, creating a program object for the context
         cl::Program program(context, util::loadProgram("vadd.cl"));
 		try
 		{
