@@ -7,6 +7,9 @@
 #
 
 PROJECTS = \
+	VAdd_Chain \
+	MatMul \
+	Pi \
 	Bilateral \
 	HostDevTransfer \
 	NBody \
