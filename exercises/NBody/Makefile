@@ -6,9 +6,7 @@
 # Contributors include Simon McIntosh-Smith, James Price, Tom Deakin and Mike O'Connor.
 #
 
-ifndef CXX
-	CXX = c++
-endif
+CXX = c++
 
 INC = ../../common
 FLAGS = -O3
