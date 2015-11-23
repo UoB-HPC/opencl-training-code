@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VAdd_Chain", "VAdd_Chain\VAdd_Chain.vcxproj", "{05F59E79-3559-4102-88B6-6530F563F308}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MatMul", "MatMul\MatMul.vcxproj", "{36219312-AB60-48C9-92B7-1F31106C22DF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pi", "Pi\Pi.vcxproj", "{2AF73B98-C4B3-46C3-8FFC-702FB5CF9BB9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{05F59E79-3559-4102-88B6-6530F563F308}.Debug|Win32.ActiveCfg = Debug|Win32
+		{05F59E79-3559-4102-88B6-6530F563F308}.Debug|Win32.Build.0 = Debug|Win32
+		{05F59E79-3559-4102-88B6-6530F563F308}.Release|Win32.ActiveCfg = Release|Win32
+		{05F59E79-3559-4102-88B6-6530F563F308}.Release|Win32.Build.0 = Release|Win32
+		{36219312-AB60-48C9-92B7-1F31106C22DF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{36219312-AB60-48C9-92B7-1F31106C22DF}.Debug|Win32.Build.0 = Debug|Win32
+		{36219312-AB60-48C9-92B7-1F31106C22DF}.Release|Win32.ActiveCfg = Release|Win32
+		{36219312-AB60-48C9-92B7-1F31106C22DF}.Release|Win32.Build.0 = Release|Win32
+		{2AF73B98-C4B3-46C3-8FFC-702FB5CF9BB9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2AF73B98-C4B3-46C3-8FFC-702FB5CF9BB9}.Debug|Win32.Build.0 = Debug|Win32
+		{2AF73B98-C4B3-46C3-8FFC-702FB5CF9BB9}.Release|Win32.ActiveCfg = Release|Win32
+		{2AF73B98-C4B3-46C3-8FFC-702FB5CF9BB9}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
