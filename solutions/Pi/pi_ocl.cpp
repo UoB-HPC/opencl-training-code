@@ -10,23 +10,17 @@
 //             Updated to C++ Wrapper v1.2.6 by Tom Deakin, August 2013
 //
 
-#define __CL_ENABLE_EXCEPTIONS
 
-#include "cl.hpp"
-#include "util.hpp"
-
-
-#include <vector>
 #include <cstdio>
 #include <cstdlib>
-#include <string>
-
 #include <iostream>
-#include <fstream>
+#include <string>
+#include <vector>
 
-
-#include "err_code.h"
-#include "device_picker.hpp"
+#define __CL_ENABLE_EXCEPTIONS
+#include <cl.hpp>
+#include <device_picker.hpp>
+#include <util.hpp>
 
 #define INSTEPS (512*512*512)
 #define ITERS (262144)
@@ -61,8 +55,7 @@ int main(int argc, char *argv[])
 
         cl::Device device = devices[deviceIndex];
 
-        std::string name;
-        getDeviceName(device, name);
+        std::string name = getDeviceName(device);
         std::cout << "\nUsing OpenCL device: " << name << "\n";
 
         std::vector<cl::Device> chosen_device;
