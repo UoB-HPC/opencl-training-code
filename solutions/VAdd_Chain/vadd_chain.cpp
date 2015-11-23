@@ -10,22 +10,21 @@
 //             Ported to C++ Wrapper API by Benedict Gaster, September 2011
 //             Updated to C++ Wrapper API v1.2 by Tom Deakin and Simon McIntosh-Smith, October 2012
 //             Updated to C++ Wrapper v1.2.6 by Tom Deakin, August 2013
-//             
+//
 //------------------------------------------------------------------------------
-
-#define __CL_ENABLE_EXCEPTIONS
-
-#include "cl.hpp"
-
-#include "util.hpp" // utility library
 
 #include <vector>
 #include <cstdio>
 #include <cstdlib>
+#include <iostream>
 #include <string>
 
-#include <iostream>
-#include <fstream>
+
+
+#define __CL_ENABLE_EXCEPTIONS
+#include <cl.hpp>
+#include <util.hpp>
+
 
 // pick up device type from compiler command line or from the default type
 #ifndef DEVICE
@@ -72,8 +71,11 @@ int main(void)
     	// Create a context
         cl::Context context(DEVICE);
 
-        // Load in kernel source, creating a program object for the context
+        cl::Device device = context.getInfo<CL_CONTEXT_DEVICES>()[0];
+        std::cout << std::endl << "Using OpenCL device: "
+                  << device.getInfo<CL_DEVICE_NAME>() << std::endl;
 
+        // Load in kernel source, creating a program object for the context
         cl::Program program(context, util::loadProgram("vadd_chain.cl"));
 		try
 		{
