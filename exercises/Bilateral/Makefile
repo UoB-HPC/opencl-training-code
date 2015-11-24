@@ -8,11 +8,11 @@
 
 CXX = c++
 
-INC = ../../common
-FLAGS = -O3
-LDFLAGS = -lm -lOpenCL
+CXXFLAGS = -O3 -I ../../common
+LDFLAGS  = -lm -lOpenCL
 
 PLATFORM = $(shell uname -s)
+
 ifeq ($(PLATFORM), Darwin)
 	LDFLAGS = -lm -framework OpenCL
 	ifeq ($(shell which sdl2-config > /dev/null; echo $$?), 0)
@@ -27,7 +27,7 @@ endif
 SRC = bilateral.cpp
 EXE = bilateral
 
-$(EXE): $(SRC)
+$(EXE): $(SRC) ../../common/*.hpp
 	$(CXX) $(FLAGS) -I $(INC) $(SRC) $(LDFLAGS) -o $(EXE)
 
 clean:
