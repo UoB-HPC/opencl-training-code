@@ -28,7 +28,7 @@ SRC = bilateral.cpp
 EXE = bilateral
 
 $(EXE): $(SRC) ../../common/*.hpp
-	$(CXX) $(FLAGS) -I $(INC) $(SRC) $(LDFLAGS) -o $(EXE)
+	$(CXX) $(CXXFLAGS) $(SRC) $(LDFLAGS) -o $(EXE)
 
 clean:
 	rm -f $(EXE) output.bmp
