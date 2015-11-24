@@ -24,9 +24,12 @@ else
 	LDFLAGS += $(shell sdl2-config --cflags --libs)
 endif
 
-EXES = bilateral_images
+EXES = bilateral_opt bilateral_images
 
 all: $(EXES)
+
+bilateral_opt: bilateral_opt.cpp ../../common/*.hpp
+	$(CXX) $(CXXFLAGS) $< $(LDFLAGS) -o $@
 
 bilateral_images: bilateral_images.cpp ../../common/*.hpp
 	$(CXX) $(CXXFLAGS) $< $(LDFLAGS) -o $@
