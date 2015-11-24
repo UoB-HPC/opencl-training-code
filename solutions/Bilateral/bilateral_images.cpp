@@ -37,6 +37,8 @@ void runReference(uint8_t *input, uint8_t *output, int width, int height);
 unsigned deviceIndex   =      0;
 unsigned iterations    =     32;
 unsigned tolerance     =      1;
+bool     verify        =   true;
+cl_int   radius        =      2;
 float    sigmaDomain   =      3.f;
 float    sigmaRange    =      0.2f;
 cl::NDRange wgsize     = cl::NullRange;
@@ -67,13 +69,16 @@ int main(int argc, char *argv[])
 
     cl::Context context(device);
     cl::CommandQueue queue(context);
-    cl::Program program(context, util::loadProgram("bilateral.cl"), false);
+    cl::Program program(context, util::loadProgram("bilateral_images.cl"));
     try
     {
       std::stringstream options;
-      options.setf(std::ios::fixed, std::ios::floatfield);
+      options.setf(std::ios::fixed);
       options << " -cl-fast-relaxed-math";
       options << " -cl-single-precision-constant";
+      options << " -DRADIUS=" << radius;
+      options << " -DSIGMA_DOMAIN=" << sigmaDomain;
+      options << " -DSIGMA_RANGE=" << sigmaRange;
       program.build(options.str().c_str());
     }
     catch (cl::Error error)
@@ -85,7 +90,7 @@ int main(int argc, char *argv[])
       }
       throw(error);
     }
-    cl::make_kernel<cl::Image2D, cl::Image2D, cl_float, cl_float>
+    cl::make_kernel<cl::Image2D, cl::Image2D>
       kernel(program, "bilateral");
 
     // Load input image
@@ -122,7 +127,7 @@ int main(int argc, char *argv[])
     for (unsigned i = 0; i < iterations; i++)
     {
       kernel(cl::EnqueueArgs(queue, global, wgsize),
-             input, output, sigmaDomain, sigmaRange);
+             input, output);
     }
     queue.finish();
     uint64_t endTime = timer.getTimeMicroseconds();
@@ -142,55 +147,58 @@ int main(int argc, char *argv[])
     SDL_SaveBMP(result, "output.bmp");
 
 
-    // Run reference
-    std::cout << "Running reference..." << std::endl;
-    uint8_t *reference = new uint8_t[image->w*image->h*4];
-    SDL_LockSurface(image);
-    startTime = timer.getTimeMicroseconds();
-    runReference((uint8_t*)image->pixels, reference, image->w, image->h);
-    endTime = timer.getTimeMicroseconds();
-    std::cout << "Reference took " << ((endTime-startTime)*1e-3) << "ms"
-              << std::endl << std::endl;
-
-    // Check results
-    unsigned errors = 0;
-    for (int y = 0; y < result->h; y++)
+    if (verify)
     {
-      for (int x = 0; x < result->w; x++)
-      {
-        for (int c = 0; c < 3; c++)
-        {
-          uint8_t out = ((uint8_t*)result->pixels)[(x + y*result->w)*4 + c];
-          uint8_t ref = reference[(x + y*result->w)*4 + c];
-          unsigned diff = abs((int)ref-(int)out);
-          if (diff > tolerance)
-          {
-            if (!errors)
-            {
-              std::cout << "Verification failed:" << std::endl;
-            }
+      // Run reference
+      std::cout << "Running reference..." << std::endl;
+      uint8_t *reference = new uint8_t[image->w*image->h*4];
+      SDL_LockSurface(image);
+      startTime = timer.getTimeMicroseconds();
+      runReference((uint8_t*)image->pixels, reference, image->w, image->h);
+      endTime = timer.getTimeMicroseconds();
+      std::cout << "Reference took " << ((endTime-startTime)*1e-3) << "ms"
+                << std::endl << std::endl;
 
-            // Only show the first 8 errors
-            if (errors++ < 8)
+      // Check results
+      unsigned errors = 0;
+      for (int y = 0; y < result->h; y++)
+      {
+        for (int x = 0; x < result->w; x++)
+        {
+          for (int c = 0; c < 3; c++)
+          {
+            uint8_t out = ((uint8_t*)result->pixels)[(x + y*result->w)*4 + c];
+            uint8_t ref = reference[(x + y*result->w)*4 + c];
+            unsigned diff = abs((int)ref-(int)out);
+            if (diff > tolerance)
             {
-              std::cout << "(" << x << "," << y << "," << c << "): "
-                        << (int)out << " vs " << (int)ref << std::endl;
+              if (!errors)
+              {
+                std::cout << "Verification failed:" << std::endl;
+              }
+
+              // Only show the first 8 errors
+              if (errors++ < 8)
+              {
+                std::cout << "(" << x << "," << y << "," << c << "): "
+                          << (int)out << " vs " << (int)ref << std::endl;
+              }
             }
           }
         }
       }
-    }
-    if (errors)
-    {
-      std::cout << "Total errors: " << errors << std::endl;
-    }
-    else
-    {
-      std::cout << "Verification passed." << std::endl;
-    }
-    SDL_UnlockSurface(result);
+      if (errors)
+      {
+        std::cout << "Total errors: " << errors << std::endl;
+      }
+      else
+      {
+        std::cout << "Verification passed." << std::endl;
+      }
+      SDL_UnlockSurface(result);
 
-    delete[] reference;
+      delete[] reference;
+    }
   }
   catch (cl::Error err)
   {
@@ -270,11 +278,23 @@ void parseArguments(int argc, char *argv[])
         exit(1);
       }
     }
+    else if (!strcmp(argv[i], "--noverify"))
+    {
+      verify = false;
+    }
     else if (!strcmp(argv[i], "--sd"))
     {
       if (++i >= argc || !parseFloat(argv[i], &sigmaDomain))
       {
         std::cout << "Invalid sigma domain" << std::endl;
+        exit(1);
+      }
+    }
+    else if (!strcmp(argv[i], "--radius"))
+    {
+      if (++i >= argc || !parseUInt(argv[i], (cl_uint*)&radius))
+      {
+        std::cout << "Invalid radius" << std::endl;
         exit(1);
       }
     }
@@ -311,6 +331,8 @@ void parseArguments(int argc, char *argv[])
       std::cout << "      --device     INDEX   Select device at INDEX" << std::endl;
       std::cout << "      --image      FILE    Use FILE as input (must be 32-bit RGBA)" << std::endl;
       std::cout << "  -i  --iterations ITRS    Number of benchmark iterations" << std::endl;
+      std::cout << "      --noverify           Skip verification" << std::endl;
+      std::cout << "      --radius     RADIUS  Set filter radius" << std::endl;
       std::cout << "      --sd         D       Set sigma domain" << std::endl;
       std::cout << "      --sr         R       Set sigma range" << std::endl;
       std::cout << "      --wgsize     W H     Work-group width and height" << std::endl;
@@ -342,16 +364,16 @@ void runReference(uint8_t *input, uint8_t *output,
       float sg = 0.f;
       float sb = 0.f;
 
-      for (int j = -2; j <= 2; j++)
+      for (int j = -radius; j <= radius; j++)
       {
-        for (int i = -2; i <= 2; i++)
+        for (int i = -radius; i <= radius; i++)
         {
-          int _x = std::min(std::max(x+i, 0), width-1);
-          int _y = std::min(std::max(y+j, 0), height-1);
+          int xi = std::min(std::max(x+i, 0), width-1);
+          int yj = std::min(std::max(y+j, 0), height-1);
 
-          float r = input[(_x + _y*width)*4 + 0]/255.f;
-          float g = input[(_x + _y*width)*4 + 1]/255.f;
-          float b = input[(_x + _y*width)*4 + 2]/255.f;
+          float r = input[(xi + yj*width)*4 + 0]/255.f;
+          float g = input[(xi + yj*width)*4 + 1]/255.f;
+          float b = input[(xi + yj*width)*4 + 2]/255.f;
 
           float weight, norm;
 

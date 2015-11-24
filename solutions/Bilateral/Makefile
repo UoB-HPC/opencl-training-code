@@ -8,9 +8,8 @@
 
 CXX = c++
 
-INC = ../../common
-FLAGS = -O3
-LDFLAGS = -lm -lOpenCL
+CXXFLAGS = -O3 -I ../../common
+LDFLAGS  = -lm -lOpenCL
 
 PLATFORM = $(shell uname -s)
 
@@ -25,12 +24,13 @@ else
 	LDFLAGS += $(shell sdl2-config --cflags --libs)
 endif
 
-SRC = bilateral.cpp
-EXE = bilateral
+EXES = bilateral_images
 
-$(EXE): $(SRC)
-	$(CXX) $(FLAGS) -I $(INC) $(SRC) $(LDFLAGS) -o $(EXE)
+all: $(EXES)
+
+bilateral_images: bilateral_images.cpp ../../common/*.hpp
+	$(CXX) $(CXXFLAGS) $< $(LDFLAGS) -o $@
 
 clean:
-	rm -f $(EXE) output.bmp
+	rm -f $(EXES) output.bmp
 
