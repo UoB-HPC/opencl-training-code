@@ -25,7 +25,6 @@ __kernel void mmul(
             for (k = 0; k < N; k++)
                 tmp += Awrk[k] * Bwrk[k];
             C[i*N+j] = tmp;
-            barrier(CLK_LOCAL_MEM_FENCE);
         }
     }
 }
