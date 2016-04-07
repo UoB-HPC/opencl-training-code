@@ -67,6 +67,14 @@ int main(int argc, char *argv[])
     std::cout << std::endl << "Using OpenCL device: " << name << std::endl
               << std::endl;
 
+    cl_bool supportsImages = device.getInfo<CL_DEVICE_IMAGE_SUPPORT>();
+    if (!supportsImages)
+    {
+       std::cout << std::endl << "Device doesn't support images!" << std::endl
+                 << std::endl;
+       return 1;
+    }
+
     cl::Context context(device);
     cl::CommandQueue queue(context);
     cl::Program program(context, util::loadProgram("bilateral_images.cl"));
