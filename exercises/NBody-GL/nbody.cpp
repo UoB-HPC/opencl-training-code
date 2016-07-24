@@ -17,6 +17,12 @@
 #include <sstream>
 #include <vector>
 
+#define CL_HPP_ENABLE_EXCEPTIONS
+#define CL_HPP_TARGET_OPENCL_VERSION 120
+#define CL_HPP_MINIMUM_OPENCL_VERSION 120
+#include <CL/cl2.hpp>
+
+
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_opengl.h"
 #undef main
@@ -29,10 +35,6 @@
   #include <OpenGL/OpenGL.h>
 #endif
 
-#define CL_HPP_ENABLE_EXCEPTIONS
-#define CL_HPP_TARGET_OPENCL_VERSION 120
-#define CL_HPP_MINIMUM_OPENCL_VERSION 120
-#include <CL/cl2.hpp>
 
 #include "util.hpp"
 #include "err_code.h"
