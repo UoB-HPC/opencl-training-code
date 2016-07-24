@@ -9,7 +9,7 @@
 CXX = c++
 
 INC = ../../common
-FLAGS = -O3
+FLAGS = -std=c++11 -O3
 LDFLAGS = -lm -lOpenCL -lGL
 
 PLATFORM = $(shell uname -s)

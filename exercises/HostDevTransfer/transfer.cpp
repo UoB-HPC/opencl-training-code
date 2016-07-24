@@ -16,8 +16,12 @@
 #include <iostream>
 #include <vector>
 
-#define __CL_ENABLE_EXCEPTIONS
-#include <cl.hpp>
+
+#define CL_HPP_ENABLE_EXCEPTIONS
+#define CL_HPP_TARGET_OPENCL_VERSION 120
+#define CL_HPP_MINIMUM_OPENCL_VERSION 120
+#include <CL/cl2.hpp>
+
 #include <device_picker.hpp>
 #include <util.hpp>
 
@@ -49,7 +53,7 @@ bool checkOutput(cl_uint *data, cl_uint value)
 }
 
 void runBenchmark(cl::Context& context, cl::CommandQueue& queue,
-                  cl::make_kernel<cl::Buffer, cl_uint> fill,
+                  cl::KernelFunctor<cl::Buffer, cl_uint> fill,
                   cl::Buffer& d_buffer, // device buffer
                   cl_uint    *h_buffer, // host buffer, ignored for zero-copy
                   bool zeroCopy)
@@ -151,7 +155,7 @@ int main(int argc, char *argv[])
     cl::Context context(device);
     cl::CommandQueue queue(context);
     cl::Program program(context, kernel_source, true);
-    cl::make_kernel<cl::Buffer, cl_uint> fill(program, "fill");
+    cl::KernelFunctor<cl::Buffer, cl_uint> fill(program, "fill");
 
     std::cout << "Type          Total   Transfer       Bandwidth" << std::endl
               << "----------------------------------------------" << std::endl;

@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
 		buildProgram(program, device);
 
         // Create the compute kernel from the program
-        cl::make_kernel<int, cl::Buffer, cl::Buffer, cl::Buffer> naive_mmul(program, "mmul");
+        cl::KernelFunctor<int, cl::Buffer, cl::Buffer, cl::Buffer> naive_mmul(program, "mmul");
 
         printf("\n===== OpenCL, matrix mult, C(i,j) per work item, order %d ======\n",N);
 

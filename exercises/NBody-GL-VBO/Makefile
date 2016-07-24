@@ -9,7 +9,7 @@
 CXX = c++
 
 INC = ../../common
-FLAGS = -O3
+FLAGS = -std=c++11 -O3
 LIBS = -lm
 LDFLAGS = -lOpenCL -lGL
 

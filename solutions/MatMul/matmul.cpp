@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
 		buildProgram(program, device);
 
         // Create the compute kernel from the program
-        cl::make_kernel<int, cl::Buffer, cl::Buffer, cl::Buffer> naive_mmul(program, "mmul");
+        cl::KernelFunctor<int, cl::Buffer, cl::Buffer, cl::Buffer> naive_mmul(program, "mmul");
 
         printf("\n===== OpenCL, matrix mult, C(i,j) per work item, order %d ======\n",N);
 
@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
 		buildProgram(program, device);
 
         // Create the compute kernel from the program
-        cl::make_kernel<int, cl::Buffer, cl::Buffer, cl::Buffer> crow_mmul(program, "mmul");
+        cl::KernelFunctor<int, cl::Buffer, cl::Buffer, cl::Buffer> crow_mmul(program, "mmul");
 
         printf("\n===== OpenCL, matrix mult, C row per work item, order %d ======\n",N);
 
@@ -192,7 +192,7 @@ int main(int argc, char *argv[])
 		buildProgram(program, device);
 
         // Create the compute kernel from the program
-        cl::make_kernel<int, cl::Buffer, cl::Buffer, cl::Buffer> arowpriv_mmul(program, "mmul");
+        cl::KernelFunctor<int, cl::Buffer, cl::Buffer, cl::Buffer> arowpriv_mmul(program, "mmul");
 
         printf("\n===== OpenCL, matrix mult, C row, A row in priv mem, order %d ======\n",N);
 
@@ -227,7 +227,7 @@ int main(int argc, char *argv[])
 		buildProgram(program, device);
 
         // Create the compute kernel from the program
-        cl::make_kernel<int, cl::Buffer, cl::Buffer, cl::Buffer, cl::LocalSpaceArg> browloc_mmul(program, "mmul");
+        cl::KernelFunctor<int, cl::Buffer, cl::Buffer, cl::Buffer, cl::LocalSpaceArg> browloc_mmul(program, "mmul");
 
         printf("\n===== OpenCL, mat mult, C row, priv A, B cols loc, order %d ======\n",N);
 
@@ -265,7 +265,7 @@ int main(int argc, char *argv[])
 		buildProgram(program, device);
 
         // Create the compute kernel from the program
-        cl::make_kernel<int, cl::Buffer, cl::Buffer, cl::Buffer, cl::LocalSpaceArg, cl::LocalSpaceArg> block_mmul(program, "mmul");
+        cl::KernelFunctor<int, cl::Buffer, cl::Buffer, cl::Buffer, cl::LocalSpaceArg, cl::LocalSpaceArg> block_mmul(program, "mmul");
 
         printf("\n===== Parallel matrix mult (blocked), order %d on device ======\n",ORDER);
 

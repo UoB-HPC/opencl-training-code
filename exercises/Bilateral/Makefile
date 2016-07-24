@@ -8,7 +8,7 @@
 
 CXX = c++
 
-CXXFLAGS = -O3 -I ../../common
+CXXFLAGS = -std=c++11 -O3 -I ../../common
 LDFLAGS  = -lm -lOpenCL
 
 PLATFORM = $(shell uname -s)

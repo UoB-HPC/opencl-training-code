@@ -21,8 +21,11 @@
 
 #include <SDL2/SDL.h>
 
-#define __CL_ENABLE_EXCEPTIONS
-#include <cl.hpp>
+#define CL_HPP_ENABLE_EXCEPTIONS
+#define CL_HPP_TARGET_OPENCL_VERSION 120
+#define CL_HPP_MINIMUM_OPENCL_VERSION 120
+#include <CL/cl2.hpp>
+
 #include <device_picker.hpp>
 #include <util.hpp>
 
@@ -98,7 +101,7 @@ int main(int argc, char *argv[])
       }
       throw(error);
     }
-    cl::make_kernel<cl::Image2D, cl::Image2D>
+    cl::KernelFunctor<cl::Image2D, cl::Image2D>
       kernel(program, "bilateral");
 
     // Load input image
@@ -114,11 +117,11 @@ int main(int argc, char *argv[])
     cl::Image2D output(context, CL_MEM_WRITE_ONLY, format, image->w, image->h);
 
     // Write image to device
-    cl::size_t<3> origin;
+    cl::array<cl::size_type, 3> origin;
     origin[0] = 0;
     origin[1] = 0;
     origin[2] = 0;
-    cl::size_t<3> region;
+    cl::array<cl::size_type, 3> region;
     region[0] = image->w;
     region[1] = image->h;
     region[2] = 1;

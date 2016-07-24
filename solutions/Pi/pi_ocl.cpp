@@ -17,8 +17,11 @@
 #include <string>
 #include <vector>
 
-#define __CL_ENABLE_EXCEPTIONS
-#include <cl.hpp>
+#define CL_HPP_ENABLE_EXCEPTIONS
+#define CL_HPP_TARGET_OPENCL_VERSION 120
+#define CL_HPP_MINIMUM_OPENCL_VERSION 120
+#include <CL/cl2.hpp>
+
 #include <device_picker.hpp>
 #include <util.hpp>
 
@@ -86,7 +89,7 @@ int main(int argc, char *argv[])
         work_group_size = ko_pi.getWorkGroupInfo<CL_KERNEL_WORK_GROUP_SIZE>(device);
         //printf("wgroup_size = %lu\n", work_group_size);
 
-        cl::make_kernel<int, float, cl::LocalSpaceArg, cl::Buffer> pi(program, "pi");
+        cl::KernelFunctor<int, float, cl::LocalSpaceArg, cl::Buffer> pi(program, "pi");
 
         // Now that we know the size of the work_groups, we can set the number of work
         // groups, the actual number of steps, and the step size
