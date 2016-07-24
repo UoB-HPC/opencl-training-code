@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 //
 // Name:       vadd_chain.cpp
-// 
+//
 // Purpose:    Elementwise addition of two vectors (c = a + b)
 //
 //                   c = a + b
@@ -69,7 +69,7 @@ int main(void)
         h_g[i]  = rand() / (float)RAND_MAX;
     }
 
-    try 
+    try
     {
     	// Create a context
         cl::Context context(DEVICE);
@@ -79,27 +79,13 @@ int main(void)
                   << device.getInfo<CL_DEVICE_NAME>() << std::endl;
 
         // Load in kernel source, creating a program object for the context
-        cl::Program program(context, util::loadProgram("vadd_chain.cl"));
-		try
-		{
-			program.build();
-		}
-		catch (cl::Error error)
-		{
-			if (error.err() == CL_BUILD_PROGRAM_FAILURE)
-			{
-				std::vector<cl::Device> devices = context.getInfo<CL_CONTEXT_DEVICES>();
-				std::string log = program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(devices[0]);
-				std::cerr << log << std::endl;
-			}
-			throw error;
-		}
+        cl::Program program(context, util::loadProgram("vadd_chain.cl"), true);
 
         // Get the command queue
         cl::CommandQueue queue(context);
 
         // Create the kernel functor
- 
+
         cl::KernelFunctor<cl::Buffer, cl::Buffer, cl::Buffer, int> vadd(program, "vadd");
 
         d_a   = cl::Buffer(context, h_a.begin(), h_a.end(), true);
@@ -114,7 +100,7 @@ int main(void)
         vadd(
             cl::EnqueueArgs(
                 queue,
-                cl::NDRange(count)), 
+                cl::NDRange(count)),
             d_a,
             d_b,
             d_c,
@@ -123,7 +109,7 @@ int main(void)
         vadd(
             cl::EnqueueArgs(
                 queue,
-                cl::NDRange(count)), 
+                cl::NDRange(count)),
             d_e,
             d_c,
             d_d,
@@ -132,7 +118,7 @@ int main(void)
         vadd(
             cl::EnqueueArgs(
                 queue,
-                cl::NDRange(count)), 
+                cl::NDRange(count)),
             d_g,
             d_d,
             d_f,
@@ -153,14 +139,19 @@ int main(void)
                 printf(" tmp %f h_a %f h_b %f h_e %f h_g %f h_f %f\n",tmp, h_a[i], h_b[i], h_e[i], h_g[i], h_f[i]);
             }
         }
-        
+
         // summarize results
         printf("C = A+B+E+G:  %d out of %d results were correct.\n", correct, count);
-        
+
+    }
+    catch (cl::BuildError error)
+    {
+      std::string log = error.getBuildLog()[0].second;
+      std::cerr << std::endl << "Build failed:" << std::endl << log << std::endl;
     }
     catch (cl::Error err) {
         std::cout << "Exception\n";
-        std::cerr 
+        std::cerr
             << "ERROR: "
             << err.what()
             << "("

@@ -81,26 +81,16 @@ int main(int argc, char *argv[])
     cl::Context context(device);
     cl::CommandQueue queue(context);
     cl::Program program(context, util::loadProgram("bilateral_images.cl"));
-    try
-    {
-      std::stringstream options;
-      options.setf(std::ios::fixed);
-      options << " -cl-fast-relaxed-math";
-      options << " -cl-single-precision-constant";
-      options << " -DRADIUS=" << radius;
-      options << " -DSIGMA_DOMAIN=" << sigmaDomain;
-      options << " -DSIGMA_RANGE=" << sigmaRange;
-      program.build(options.str().c_str());
-    }
-    catch (cl::Error error)
-    {
-      if (error.err() == CL_BUILD_PROGRAM_FAILURE)
-      {
-        std::string log = program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(device);
-        std::cerr << log << std::endl;
-      }
-      throw(error);
-    }
+
+    std::stringstream options;
+    options.setf(std::ios::fixed);
+    options << " -cl-fast-relaxed-math";
+    options << " -cl-single-precision-constant";
+    options << " -DRADIUS=" << radius;
+    options << " -DSIGMA_DOMAIN=" << sigmaDomain;
+    options << " -DSIGMA_RANGE=" << sigmaRange;
+    program.build(options.str().c_str());
+
     cl::KernelFunctor<cl::Image2D, cl::Image2D>
       kernel(program, "bilateral");
 
@@ -210,6 +200,11 @@ int main(int argc, char *argv[])
 
       delete[] reference;
     }
+  }
+  catch (cl::BuildError error)
+  {
+    std::string log = error.getBuildLog()[0].second;
+    std::cerr << std::endl << "Build failed:" << std::endl << log << std::endl;
   }
   catch (cl::Error err)
   {

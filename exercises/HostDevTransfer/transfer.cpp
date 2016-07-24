@@ -200,6 +200,11 @@ int main(int argc, char *argv[])
       // **** TODO ****
     }
   }
+  catch (cl::BuildError error)
+  {
+    std::string log = error.getBuildLog()[0].second;
+    std::cerr << std::endl << "Build failed:" << std::endl << log << std::endl;
+  }
   catch (cl::Error err)
   {
     std::cout << "Exception:" << std::endl

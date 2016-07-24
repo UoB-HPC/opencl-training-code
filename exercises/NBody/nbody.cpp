@@ -88,20 +88,7 @@ int main(int argc, char *argv[])
     cl::Context context(device);
     cl::CommandQueue queue(context);
 
-    cl::Program program(context, util::loadProgram("kernel.cl"));
-    try
-    {
-      program.build();
-    }
-    catch (cl::Error error)
-    {
-      if (error.err() == CL_BUILD_PROGRAM_FAILURE)
-      {
-        std::string log = program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(device);
-        std::cerr << log << std::endl;
-      }
-      throw(error);
-    }
+    cl::Program program(context, util::loadProgram("kernel.cl"), true);
 
     cl::KernelFunctor<cl::Buffer, cl::Buffer, cl::Buffer, cl_uint, cl_float, cl_float>
       nbodyKernel(program, "nbody");
@@ -213,6 +200,11 @@ int main(int argc, char *argv[])
       std::cout << "Verification passed." << std::endl;
     }
     std::cout << std::endl;
+  }
+  catch (cl::BuildError error)
+  {
+    std::string log = error.getBuildLog()[0].second;
+    std::cerr << std::endl << "Build failed:" << std::endl << log << std::endl;
   }
   catch (cl::Error err)
   {

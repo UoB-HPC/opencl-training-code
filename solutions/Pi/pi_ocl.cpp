@@ -67,29 +67,16 @@ int main(int argc, char *argv[])
         cl::CommandQueue queue(context, device);
 
         // Create the program object
-        cl::Program program(context, util::loadProgram("pi_ocl.cl"));
-		try
-		{
-			program.build();
-		}
-		catch (cl::Error error)
-		{
-			if (error.err() == CL_BUILD_PROGRAM_FAILURE)
-			{
-				std::string log = program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(device);
-				std::cerr << log << std::endl;
-			}
-			throw error;
-		}
+        cl::Program program(context, util::loadProgram("pi_ocl.cl"), true);
 
-        // Create the kernel object for quering information
-        cl::Kernel ko_pi(program, "pi");
+        cl::KernelFunctor<int, float, cl::LocalSpaceArg, cl::Buffer> pi(program, "pi");
+
+        // Get the kernel object for querying information
+        cl::Kernel ko_pi = pi.getKernel();
 
         // Get the work group size
         work_group_size = ko_pi.getWorkGroupInfo<CL_KERNEL_WORK_GROUP_SIZE>(device);
         //printf("wgroup_size = %lu\n", work_group_size);
-
-        cl::KernelFunctor<int, float, cl::LocalSpaceArg, cl::Buffer> pi(program, "pi");
 
         // Now that we know the size of the work_groups, we can set the number of work
         // groups, the actual number of steps, and the step size
@@ -140,6 +127,11 @@ int main(int argc, char *argv[])
         printf("\nThe calculation ran in %lf seconds\n", rtime);
         printf(" pi = %f for %d steps\n", pi_res, nsteps);
 
+    }
+    catch (cl::BuildError error)
+    {
+      std::string log = error.getBuildLog()[0].second;
+      std::cerr << std::endl << "Build failed:" << std::endl << log << std::endl;
     }
     catch (cl::Error err) {
         std::cout << "Exception\n";

@@ -66,22 +66,8 @@ int main(void)
         std::cout << std::endl << "Using OpenCL device: "
                   << device.getInfo<CL_DEVICE_NAME>() << std::endl;
 
-        // Load in kernel source, creating a program object for the context
-        cl::Program program(context, util::loadProgram("vadd.cl"));
-		try
-		{
-			program.build();
-		}
-		catch (cl::Error error)
-		{
-			if (error.err() == CL_BUILD_PROGRAM_FAILURE)
-			{
-				std::vector<cl::Device> devices = context.getInfo<CL_CONTEXT_DEVICES>();
-				std::string log = program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(devices[0]);
-				std::cerr << log << std::endl;
-			}
-			throw error;
-		}
+        // Load in kernel source, creating and building a program object for the context
+        cl::Program program(context, util::loadProgram("vadd.cl"), true);
 
         // Get the command queue
         cl::CommandQueue queue(context);
@@ -138,6 +124,11 @@ int main(void)
             "vector add to find C = A+B:  %d out of %d results were correct.\n",
             correct,
             count);
+    }
+    catch (cl::BuildError error)
+    {
+      std::string log = error.getBuildLog()[0].second;
+      std::cerr << std::endl << "Build failed:" << std::endl << log << std::endl;
     }
     catch (cl::Error err) {
         std::cout << "Exception\n";

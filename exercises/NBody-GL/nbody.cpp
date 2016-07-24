@@ -131,28 +131,17 @@ int main(int argc, char *argv[])
     cl::CommandQueue queue(context);
 
     cl::Program program(context, util::loadProgram("kernel.cl"));
-    try
-    {
-      std::stringstream options;
-      options.setf(std::ios::fixed, std::ios::floatfield);
-      options << " -cl-fast-relaxed-math";
-      options << " -cl-single-precision-constant";
-      options << " -Dsoftening=" << softening << "f";
-      options << " -Ddelta=" << delta << "f";
-      options << " -DWGSIZE=" << wgsize;
-      if (useLocal)
-        options << " -DUSE_LOCAL";
-      program.build(options.str().c_str());
-    }
-    catch (cl::Error error)
-    {
-      if (error.err() == CL_BUILD_PROGRAM_FAILURE)
-      {
-        std::string log = program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(device);
-        std::cerr << log << std::endl;
-      }
-      throw(error);
-    }
+
+    std::stringstream options;
+    options.setf(std::ios::fixed, std::ios::floatfield);
+    options << " -cl-fast-relaxed-math";
+    options << " -cl-single-precision-constant";
+    options << " -Dsoftening=" << softening << "f";
+    options << " -Ddelta=" << delta << "f";
+    options << " -DWGSIZE=" << wgsize;
+    if (useLocal)
+      options << " -DUSE_LOCAL";
+    program.build(options.str().c_str());
 
     cl::KernelFunctor<cl::Buffer, cl::Buffer, cl::Buffer, cl_uint>
       nbodyKernel(program, "nbody");
@@ -255,6 +244,11 @@ int main(int argc, char *argv[])
               << std::endl << std::endl;
 
     releaseGraphics();
+  }
+  catch (cl::BuildError error)
+  {
+    std::string log = error.getBuildLog()[0].second;
+    std::cerr << std::endl << "Build failed:" << std::endl << log << std::endl;
   }
   catch (cl::Error err)
   {

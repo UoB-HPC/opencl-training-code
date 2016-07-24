@@ -26,8 +26,6 @@
 #include <util.hpp>
 #include "device_picker.hpp"
 
-void buildProgram(cl::Program& program, cl::Device& device);
-
 int main(int argc, char *argv[])
 {
 
@@ -121,8 +119,7 @@ int main(int argc, char *argv[])
         timer.reset();
 
         // Create the compute program from the source buffer
-        cl::Program program(context, util::loadProgram("kernel.cl"));
-		buildProgram(program, device);
+        cl::Program program(context, util::loadProgram("kernel.cl"), true);
 
         // Create the compute kernel from the program
         cl::KernelFunctor<int, cl::Buffer, cl::Buffer, cl::Buffer> naive_mmul(program, "mmul");
@@ -154,7 +151,13 @@ int main(int argc, char *argv[])
 
         } // end for loop
 
-    } catch (cl::Error err)
+    }
+    catch (cl::BuildError error)
+    {
+      std::string log = error.getBuildLog()[0].second;
+      std::cerr << std::endl << "Build failed:" << std::endl << log << std::endl;
+    }
+    catch (cl::Error err)
     {
         std::cout << "Exception\n";
         std::cerr << "ERROR: "
@@ -170,21 +173,4 @@ int main(int argc, char *argv[])
 #endif
 
     return EXIT_SUCCESS;
-}
-
-void buildProgram(cl::Program& program, cl::Device& device)
-{
-	try
-	{
-		program.build();
-	}
-	catch (cl::Error error)
-	{
-		if (error.err() == CL_BUILD_PROGRAM_FAILURE)
-		{
-			std::string log = program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(device);
-			std::cerr << log << std::endl;
-		}
-		throw(error);
-	}
 }

@@ -204,6 +204,11 @@ int main(int argc, char *argv[])
       queue.enqueueUnmapMemObject(d_pinned, h_pinned);
     }
   }
+  catch (cl::BuildError error)
+  {
+    std::string log = error.getBuildLog()[0].second;
+    std::cerr << std::endl << "Build failed:" << std::endl << log << std::endl;
+  }
   catch (cl::Error err)
   {
     std::cout << "Exception:" << std::endl
