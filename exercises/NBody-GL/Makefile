@@ -10,7 +10,7 @@ CXX = c++
 
 INC = ../../common
 FLAGS = -std=c++11 -O3
-LDFLAGS = -lm -lOpenCL -lGL
+LDFLAGS = -lm -lOpenCL -lGL -lrt
 
 PLATFORM = $(shell uname -s)
 ifeq ($(PLATFORM), Darwin)

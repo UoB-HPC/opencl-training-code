@@ -10,7 +10,7 @@ CC = cc
 
 INC = ../../common
 FLAGS = -O3
-LDFLAGS = -lOpenCL
+LDFLAGS = -lOpenCL -lrt
 
 PLATFORM = $(shell uname -s)
 ifeq ($(PLATFORM), Darwin)
