@@ -20,7 +20,7 @@ endif
 SRC = matmul.cpp matrix_lib.cpp
 EXE = matmul
 
-$(EXE): $(SRC)
+$(EXE): $(SRC) matmul.hpp
 	$(CXX) $(FLAGS) -I $(INC) $(SRC) $(LDFLAGS) -o $(EXE)
 
 clean:
