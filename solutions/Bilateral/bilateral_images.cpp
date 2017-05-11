@@ -1,5 +1,5 @@
 //
-// OpenCL host<->device transfer exercse
+// OpenCL host<->device transfer exercise
 //
 
 /*
@@ -19,7 +19,16 @@
 #include <sstream>
 #include <vector>
 
+#ifdef USE_SDL
 #include <SDL2/SDL.h>
+#else
+typedef struct
+{
+  int w, h;
+  unsigned char *pixels;
+} HostImage;
+HostImage* createHostImage(int width, int height);
+#endif
 
 #define CL_HPP_ENABLE_EXCEPTIONS
 #define CL_HPP_TARGET_OPENCL_VERSION 120
@@ -44,6 +53,10 @@ bool     verify        =   true;
 cl_int   radius        =      2;
 float    sigmaDomain   =      3.f;
 float    sigmaRange    =      0.2f;
+#ifndef USE_SDL
+int      width         =  1920;
+int      height        =  1080;
+#endif
 cl::NDRange wgsize     = cl::NullRange;
 const char *inputFile  =  "1080p.bmp";
 
@@ -95,12 +108,22 @@ int main(int argc, char *argv[])
       kernel(program, "bilateral");
 
     // Load input image
+#ifdef USE_SDL
     SDL_Surface *image = SDL_LoadBMP(inputFile);
     if (!image)
     {
       std::cout << SDL_GetError() << std::endl;
       throw;
     }
+#else
+    HostImage *image = createHostImage(width, height);
+    for (int i = 0; i < image->w*image->h*4; i++)
+    {
+      image->pixels[i] = rand() % 256;
+    }
+#endif
+    std::cout << "Processing image of size " << image->w << "x" << image->h
+              << std::endl << std::endl;
 
     cl::ImageFormat format(CL_RGBA, CL_UNORM_INT8);
     cl::Image2D input(context, CL_MEM_READ_ONLY, format, image->w, image->h);
@@ -138,6 +161,7 @@ int main(int argc, char *argv[])
               << " (" << (total/iterations) << "ms / frame)"
               << std::endl << std::endl;
 
+#ifdef USE_SDL
     // Save result to file
     SDL_Surface *result = SDL_ConvertSurface(image,
                                              image->format, image->flags);
@@ -146,14 +170,20 @@ int main(int argc, char *argv[])
                            0, 0, result->pixels);
     SDL_UnlockSurface(result);
     SDL_SaveBMP(result, "output.bmp");
-
+#else
+    HostImage *result = createHostImage(image->w, image->h);
+    queue.enqueueReadImage(output, CL_TRUE, origin, region,
+                           0, 0, result->pixels);
+#endif
 
     if (verify)
     {
       // Run reference
       std::cout << "Running reference..." << std::endl;
       uint8_t *reference = new uint8_t[image->w*image->h*4];
+#ifdef USE_SDL
       SDL_LockSurface(image);
+#endif
       startTime = timer.getTimeMicroseconds();
       runReference((uint8_t*)image->pixels, reference, image->w, image->h);
       endTime = timer.getTimeMicroseconds();
@@ -161,6 +191,7 @@ int main(int argc, char *argv[])
                 << std::endl << std::endl;
 
       // Check results
+      char cstr[] = {'x', 'y', 'z'};
       unsigned errors = 0;
       for (int y = 0; y < result->h; y++)
       {
@@ -181,7 +212,7 @@ int main(int argc, char *argv[])
               // Only show the first 8 errors
               if (errors++ < 8)
               {
-                std::cout << "(" << x << "," << y << "," << c << "): "
+                std::cout << "(" << x << "," << y << ")." << cstr[c] << ": "
                           << (int)out << " vs " << (int)ref << std::endl;
               }
             }
@@ -196,7 +227,9 @@ int main(int argc, char *argv[])
       {
         std::cout << "Verification passed." << std::endl;
       }
+#ifdef USE_SDL
       SDL_UnlockSurface(result);
+#endif
 
       delete[] reference;
     }
@@ -327,6 +360,24 @@ void parseArguments(int argc, char *argv[])
       }
       wgsize = cl::NDRange(width, height);
     }
+#ifndef USE_SDL
+    else if (!strcmp(argv[i], "--width"))
+    {
+      if (++i >= argc || !parseUInt(argv[i], (cl_uint*)&width))
+      {
+        std::cout << "Invalid width" << std::endl;
+        exit(1);
+      }
+    }
+    else if (!strcmp(argv[i], "--height"))
+    {
+      if (++i >= argc || !parseUInt(argv[i], (cl_uint*)&height))
+      {
+        std::cout << "Invalid height" << std::endl;
+        exit(1);
+      }
+    }
+#endif
     else if (!strcmp(argv[i], "--help") || !strcmp(argv[i], "-h"))
     {
       std::cout << std::endl;
@@ -342,6 +393,10 @@ void parseArguments(int argc, char *argv[])
       std::cout << "      --sd         D       Set sigma domain" << std::endl;
       std::cout << "      --sr         R       Set sigma range" << std::endl;
       std::cout << "      --wgsize     W H     Work-group width and height" << std::endl;
+#ifndef USE_SDL
+      std::cout << "      --width      W       Set image width" << std::endl;
+      std::cout << "      --height     H       Set image height" << std::endl;
+#endif
       std::cout << std::endl;
       exit(0);
     }
@@ -353,6 +408,17 @@ void parseArguments(int argc, char *argv[])
     }
   }
 }
+
+#ifndef USE_SDL
+HostImage* createHostImage(int width, int height)
+{
+  HostImage *result = (HostImage*)malloc(sizeof(HostImage));
+  result->w = width;
+  result->h = height;
+  result->pixels = (unsigned char*)malloc(width*height*4);
+  return result;
+}
+#endif
 
 void runReference(uint8_t *input, uint8_t *output,
                   int width, int height)

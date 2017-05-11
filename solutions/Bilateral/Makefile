@@ -10,18 +10,19 @@ CXX = c++
 
 CXXFLAGS = -std=c++11 -O3 -I ../../common
 LDFLAGS  = -lm -lOpenCL -lrt
+SDLFLAGS = -D USE_SDL
 
 PLATFORM = $(shell uname -s)
 
 ifeq ($(PLATFORM), Darwin)
 	LDFLAGS = -lm -framework OpenCL
 	ifeq ($(shell which sdl2-config > /dev/null; echo $$?), 0)
-		LDFLAGS += $(shell sdl2-config --cflags --libs)
+		SDLFLAGS += $(shell sdl2-config --cflags --libs)
 	else
-		LDFLAGS += -framework SDL2
+		SDLFLAGS += -framework SDL2
 	endif
 else
-	LDFLAGS += $(shell sdl2-config --cflags --libs)
+	SDLFLAGS += $(shell sdl2-config --cflags --libs)
 endif
 
 EXES = bilateral_meta bilateral_opt bilateral_images
@@ -37,6 +38,8 @@ bilateral_opt: bilateral_opt.cpp ../../common/*.hpp
 bilateral_images: bilateral_images.cpp ../../common/*.hpp
 	$(CXX) $(CXXFLAGS) $< $(LDFLAGS) -o $@
 
+use-sdl: CXXFLAGS += $(SDLFLAGS)
+use-sdl: all
+
 clean:
 	rm -f $(EXES) output.bmp
-
