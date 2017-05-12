@@ -10,7 +10,8 @@
 
 kernel void bilateral(global const uchar4 *input,
                       global       uchar4 *output,
-                      const float sigmaDomain, const float sigmaRange,
+                      const float sigmaDomain,
+                      const float sigmaRange,
                       const int radius)
 {
   int y      = get_global_id(0);
