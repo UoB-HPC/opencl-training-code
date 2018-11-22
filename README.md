@@ -3,16 +3,6 @@ material. At some point, this will probably become public, when we
 have ironed out the various issues it currently has.
 
 
-Managing Slides
-===============
-Although PowerPoint doesn't play well with Git, it's still useful to
-track versions and have a history of who changed what and
-when. PowerPoint for Mac has a reasonable 'compare and merge' facility
-(under the 'Review' tab), which can be used if you encounter a merge
-conflict. Email-based mutexes could also be used to reduce the risk of
-conflicts.
-
-
 Dependencies
 ============
 
@@ -41,7 +31,7 @@ Unix and OS X
 
 Just type `make`.
 There is a Makefile in each project directory, and global ones in the `exercises` and `solutions` directories.
-To change the compiler from the default C++ compiler set the `CXX` variable; for example `make CXX=icpc`.
+To change the compiler from the default C/C++ compilers set the `CC`/`CXX` variables; for example `make CXX=icpc`.
 
 
 Notes
@@ -55,18 +45,6 @@ We expect 8 incorrect values.
 
 TODO
 ====
-- [x] Merge pre-existing conflict for 'part2' slides (there's an 'sms' version)
-- [x] Update Host<->Device transfer exercise + slides with proper pinned mem approach
-- [x] Add zero-copy transfer to Host<->Device transfer exercise + slides
-- [x] Sort out Visual Studio solutions (try using VS 2010)
-- [x] Add Unix Makefiles
-- [x] Instructions for using HP server and Zoo
-- [x] Add deps to part 1 slides
-- [x] Remove native functions in Bilaterial exercise
-- [x] Update intro with correct path to all course material
-- [x] Add links to IWOCL talks to the outro slides
-- [x] Remove Bandwidth measurement if test fails
-- [x] Add note about work-group size on OS X CPU
-- [x] Fix potential issue with -framework SDL2 in Makefiles?
-- [x] Add conditional recompile in Makefiles
-
+- [ ] Port remaining exercises to C
+- [ ] Update Visual Studio solutions to include C exercises (or use CMake?)
+- [ ] Add job scripts for Isambard
