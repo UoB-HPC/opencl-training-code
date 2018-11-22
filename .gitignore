@@ -14,7 +14,8 @@ Release/
 
 output.bmp
 
-exercises/DeviceInfo/deviceinfo
+exercises/DeviceInfo/deviceinfo-c
+exercises/DeviceInfo/deviceinfo-c++
 exercises/Bilateral/bilateral-c
 exercises/Bilateral/bilateral-c++
 exercises/HostDevTransfer/transfer

@@ -6,23 +6,29 @@
 # Contributors include Simon McIntosh-Smith, James Price, Tom Deakin and Mike O'Connor.
 #
 
+CC = cc
 CXX = c++
 
-INC = ../../common
-FLAGS = -std=c++11 -O3
-LDFLAGS = -lOpenCL -lrt
+CFLAGS = -std=c99 -O3 -I ../../common
+CXXFLAGS = -std=c++11 -O3 -I ../../common
+LDFLAGS = -lOpenCL
 
 PLATFORM = $(shell uname -s)
 ifeq ($(PLATFORM), Darwin)
 	LDFLAGS = -framework OpenCL
 endif
 
-SRC = deviceinfo.cpp
-EXE = deviceinfo
+EXES = deviceinfo-c deviceinfo-c++
 
-$(EXE): $(SRC)
-	$(CXX) $(FLAGS) -I $(INC) $(SRC) $(LDFLAGS) -o $(EXE)
+all: $(EXES)
 
+deviceinfo-c: deviceinfo.c ../../common/*.h
+	$(CC) $(CFLAGS) deviceinfo.c $(LDFLAGS) -o $@
+
+deviceinfo-c++: deviceinfo.cpp ../../common/*.hpp
+	$(CXX) $(CXXFLAGS) deviceinfo.cpp $(LDFLAGS) -o $@
+
+.PHONY: clean
 clean:
-	rm -f $(EXE)
+	rm -f $(EXES)
 
