@@ -191,8 +191,7 @@ int main(int argc, char *argv[])
     runReference((uint8_t*)image->pixels, reference, image->w, image->h);
     endTime = getCurrentTimeNanoseconds();
     total = ((endTime-startTime)*1e-6);
-    printf("Reference took %.1f ms (%.1f ms / frame)\n\n",
-           total, (total/iterations));
+    printf("Reference took %.1f ms\n\n", total);
 
     // Check results
     char cstr[] = {'r', 'g', 'b'};
