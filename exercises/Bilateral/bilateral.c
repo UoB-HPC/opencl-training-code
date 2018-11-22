@@ -308,7 +308,7 @@ void parseArguments(int argc, char *argv[])
     }
     else if (!strcmp(argv[i], "--noverify"))
     {
-      verify = false;
+      verify = 0;
     }
     else if (!strcmp(argv[i], "--sd"))
     {
