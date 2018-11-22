@@ -6,8 +6,10 @@
 # Contributors include Simon McIntosh-Smith, James Price, Tom Deakin and Mike O'Connor.
 #
 
+CC = cc
 CXX = c++
 
+CFLAGS = -std=c99 -O3 -I ../../common
 CXXFLAGS = -std=c++11 -O3 -I ../../common
 LDFLAGS  = -lm -lOpenCL -lrt
 SDLFLAGS = -D USE_SDL
@@ -25,14 +27,18 @@ else
 	SDLFLAGS += $(shell sdl2-config --cflags --libs)
 endif
 
-SRC = bilateral.cpp
-EXE = bilateral
+EXES = bilateral-c bilateral-c++
 
-$(EXE): $(SRC) ../../common/*.hpp
-	$(CXX) $(CXXFLAGS) $(SRC) $(LDFLAGS) -o $(EXE)
+all: $(EXES)
 
-use-sdl: CXXFLAGS += $(SDLFLAGS)
-use-sdl: $(EXE)
+bilateral-c: bilateral.c ../../common/*.h
+	$(CC) $(CFLAGS) bilateral.c $(LDFLAGS) -o $@
+
+bilateral-c++: bilateral.cpp ../../common/*.hpp
+	$(CXX) $(CXXFLAGS) bilateral.cpp $(LDFLAGS) -o $@
+
+use-sdl: CFLAGS += $(SDLFLAGS) CXXFLAGS += $(SDLFLAGS)
+use-sdl: $(EXES)
 
 clean:
-	rm -f $(EXE) output.bmp
+	rm -f $(EXES) output.bmp
