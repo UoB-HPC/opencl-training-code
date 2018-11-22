@@ -1,5 +1,5 @@
 //
-// OpenCL host<->device transfer exercise
+// OpenCL bilateral filter exercise
 //
 
 /*
