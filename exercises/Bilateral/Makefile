@@ -38,7 +38,7 @@ bilateral-c++: bilateral.cpp ../../common/*.hpp
 	$(CXX) $(CXXFLAGS) bilateral.cpp $(LDFLAGS) -o $@
 
 use-sdl: CFLAGS += $(SDLFLAGS) CXXFLAGS += $(SDLFLAGS)
-use-sdl: $(EXES)
+use-sdl: all
 
 clean:
 	rm -f $(EXES) output.bmp

@@ -21,7 +21,12 @@ exercises/Bilateral/bilateral-c++
 exercises/HostDevTransfer/transfer
 exercises/NBody-GL/nbody
 exercises/NBody/nbody
-solutions/Bilateral/bilateral
+solutions/Bilateral/bilateral_meta-c
+solutions/Bilateral/bilateral_meta-c++
+solutions/Bilateral/bilateral_opt-c
+solutions/Bilateral/bilateral_opt-c++
+solutions/Bilateral/bilateral_images-c
+solutions/Bilateral/bilateral_images-c++
 solutions/HostDevTransfer/transfer
 solutions/NBody-GL-VBO/nbody
 solutions/NBody-GL/nbody

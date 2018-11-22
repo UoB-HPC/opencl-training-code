@@ -6,8 +6,10 @@
 # Contributors include Simon McIntosh-Smith, James Price, Tom Deakin and Mike O'Connor.
 #
 
+CC = cc
 CXX = c++
 
+CFLAGS = -std=c99 -O3 -I ../../common
 CXXFLAGS = -std=c++11 -O3 -I ../../common
 LDFLAGS  = -lm -lOpenCL -lrt
 SDLFLAGS = -D USE_SDL
@@ -25,20 +27,30 @@ else
 	SDLFLAGS += $(shell sdl2-config --cflags --libs)
 endif
 
-EXES = bilateral_meta bilateral_opt bilateral_images
+EXES = bilateral_meta-c bilateral_opt-c bilateral_images-c \
+       bilateral_meta-c++ bilateral_opt-c++ bilateral_images-c++
 
 all: $(EXES)
 
-bilateral_meta: bilateral_meta.cpp ../../common/*.hpp
+bilateral_meta-c: bilateral_meta.c ../../common/*.h
+	$(CC) $(CFLAGS) $< $(LDFLAGS) -o $@
+
+bilateral_meta-c++: bilateral_meta.cpp ../../common/*.hpp
 	$(CXX) $(CXXFLAGS) $< $(LDFLAGS) -o $@
 
-bilateral_opt: bilateral_opt.cpp ../../common/*.hpp
+bilateral_opt-c: bilateral_opt.c ../../common/*.h
+	$(CC) $(CFLAGS) $< $(LDFLAGS) -o $@
+
+bilateral_opt-c++: bilateral_opt.cpp ../../common/*.hpp
 	$(CXX) $(CXXFLAGS) $< $(LDFLAGS) -o $@
 
-bilateral_images: bilateral_images.cpp ../../common/*.hpp
+bilateral_images-c: bilateral_images.c ../../common/*.h
+	$(CC) $(CFLAGS) $< $(LDFLAGS) -o $@
+
+bilateral_images-c++: bilateral_images.cpp ../../common/*.hpp
 	$(CXX) $(CXXFLAGS) $< $(LDFLAGS) -o $@
 
-use-sdl: CXXFLAGS += $(SDLFLAGS)
+use-sdl: CFLAGS += $(SDLFLAGS) CXXFLAGS += $(SDLFLAGS)
 use-sdl: all
 
 clean:
