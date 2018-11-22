@@ -30,7 +30,7 @@
  * Contributors include Simon McIntosh-Smith, James Price, Tom Deakin and Mike O'Connor.
  *
  */
- 
+
 #if defined(__APPLE__) || defined(__MACOSX)
 #include <OpenCL/opencl.h>
 #else
@@ -39,6 +39,8 @@
 
 #ifdef __cplusplus
  #include <cstdio>
+#else
+ #include <stdio.h>
 #endif
 
 const char *err_code (cl_int err_in)
@@ -164,4 +166,3 @@ void check_error(cl_int err, const char *operation, char *filename, int line)
 
 
 #define checkError(E, S) check_error(E,S,__FILE__,__LINE__)
-
