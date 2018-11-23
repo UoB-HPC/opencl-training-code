@@ -2,14 +2,17 @@
 //
 // Name:       vadd_chain.cpp
 //
-// Purpose:    Elementwise addition of two vectors (c = a + b)
+// Purpose:    Chain of elementwise addition of three vectors:
 //
-//                   c = a + b
+//                   d = a + b + c
+//                   g = d + e + f
+//                   
 //
 // HISTORY:    Written by Tim Mattson, June 2011
 //             Ported to C++ Wrapper API by Benedict Gaster, September 2011
 //             Updated to C++ Wrapper API v1.2 by Tom Deakin and Simon McIntosh-Smith, October 2012
 //             Updated to C++ Wrapper v1.2.6 by Tom Deakin, August 2013
+//             Updated by Tom Deakin, November 2018
 //
 //------------------------------------------------------------------------------
 
@@ -45,28 +48,29 @@ int main(void)
 {
     std::vector<float> h_a(LENGTH);                     // a vector
     std::vector<float> h_b(LENGTH);                     // b vector
-    std::vector<float> h_c (LENGTH, (float)0xdeadbeef); // c vector (result)
-    std::vector<float> h_d (LENGTH, (float)0xdeadbeef); // d vector (result)
-    std::vector<float> h_e (LENGTH);                    // e vector
-    std::vector<float> h_f (LENGTH, (float)0xdeadbeef); // f vector (result)
-    std::vector<float> h_g (LENGTH);                    // g vector
+    std::vector<float> h_c(LENGTH);                     // c vector
+    std::vector<float> h_d(LENGTH, (float)0xdeadbeef);  // d vector (result)
+    std::vector<float> h_e(LENGTH);                     // e vector
+    std::vector<float> h_f(LENGTH);                     // f vector
+    std::vector<float> h_g(LENGTH, (float)0xdeadbeef);  // g vector (result)
 
     cl::Buffer d_a;                       // device memory used for the input  a vector
     cl::Buffer d_b;                       // device memory used for the input  b vector
-    cl::Buffer d_c;                       // device memory used for the output c vector
-    cl::Buffer d_d;                       // device memory used for the output d vector
-    cl::Buffer d_e;                       // device memory used for the input e vector
-    cl::Buffer d_f;                       // device memory used for the output f vector
-    cl::Buffer d_g;                       // device memory used for the input g vector
+    cl::Buffer d_c;                       // device memory used for the input  c vector
+    cl::Buffer d_d;                       // device memory used for the input/output d vector
+    cl::Buffer d_e;                       // device memory used for the input  e vector
+    cl::Buffer d_f;                       // device memory used for the input  f vector
+    cl::Buffer d_g;                       // device memory used for the output g vector
 
-    // Fill vectors a and b with random float values
+    // Fill input vectors with random float values
     int count = LENGTH;
     for(int i = 0; i < count; i++)
     {
         h_a[i]  = rand() / (float)RAND_MAX;
         h_b[i]  = rand() / (float)RAND_MAX;
+        h_c[i]  = rand() / (float)RAND_MAX;
         h_e[i]  = rand() / (float)RAND_MAX;
-        h_g[i]  = rand() / (float)RAND_MAX;
+        h_f[i]  = rand() / (float)RAND_MAX;
     }
 
     try
@@ -86,16 +90,16 @@ int main(void)
 
         // Create the kernel functor
 
-        cl::KernelFunctor<cl::Buffer, cl::Buffer, cl::Buffer, int> vadd(program, "vadd");
+        cl::KernelFunctor<cl::Buffer, cl::Buffer, cl::Buffer, cl::Buffer, int> vadd(program, "vadd");
 
         d_a   = cl::Buffer(context, h_a.begin(), h_a.end(), true);
         d_b   = cl::Buffer(context, h_b.begin(), h_b.end(), true);
+        d_c   = cl::Buffer(context, h_c.begin(), h_c.end(), true);
         d_e   = cl::Buffer(context, h_e.begin(), h_e.end(), true);
-        d_g   = cl::Buffer(context, h_g.begin(), h_g.end(), true);
+        d_f   = cl::Buffer(context, h_f.begin(), h_f.end(), true);
 
-        d_c  = cl::Buffer(context, CL_MEM_READ_WRITE, sizeof(float) * LENGTH);
         d_d  = cl::Buffer(context, CL_MEM_READ_WRITE, sizeof(float) * LENGTH);
-        d_f  = cl::Buffer(context, CL_MEM_WRITE_ONLY, sizeof(float) * LENGTH);
+        d_g  = cl::Buffer(context, CL_MEM_WRITE_ONLY, sizeof(float) * LENGTH);
 
         vadd(
             cl::EnqueueArgs(
@@ -104,44 +108,37 @@ int main(void)
             d_a,
             d_b,
             d_c,
+            d_d,
             count);
 
         vadd(
             cl::EnqueueArgs(
                 queue,
                 cl::NDRange(count)),
+            d_d,
             d_e,
-            d_c,
-            d_d,
-            count);
-
-        vadd(
-            cl::EnqueueArgs(
-                queue,
-                cl::NDRange(count)),
-            d_g,
-            d_d,
             d_f,
+            d_g,
             count);
 
-        cl::copy(queue, d_f, h_f.begin(), h_f.end());
+        cl::copy(queue, d_g, h_g.begin(), h_g.end());
 
         // Test the results
         int correct = 0;
         float tmp;
         for(int i = 0; i < count; i++)
         {
-            tmp = h_a[i] + h_b[i] + h_e[i] + h_g[i];     // assign element i of a+b+e+g to tmp
-            tmp -= h_f[i];                               // compute deviation of expected and output result
-            if(tmp*tmp < TOL*TOL)                        // correct if square deviation is less than tolerance squared
+            tmp = h_a[i] + h_b[i] + h_c[i] + h_e[i] + h_f[i]; // assign element i of a+b+c+e+f to tmp
+            tmp -= h_g[i];                                    // compute deviation of expected and output result
+            if(tmp*tmp < TOL*TOL)                             // correct if square deviation is less than tolerance squared
                 correct++;
             else {
-                printf(" tmp %f h_a %f h_b %f h_e %f h_g %f h_f %f\n",tmp, h_a[i], h_b[i], h_e[i], h_g[i], h_f[i]);
+                printf(" tmp %f h_a %f h_b %f h_c %f h_e %f h_f %f h_g %f\n",tmp, h_a[i], h_b[i], h_c[i], h_e[i], h_f[i], h_g[i]);
             }
         }
 
         // summarize results
-        printf("C = A+B+E+G:  %d out of %d results were correct.\n", correct, count);
+        printf("G = A+B+C+E+F:  %d out of %d results were correct.\n", correct, count);
 
     }
     catch (cl::BuildError error)
