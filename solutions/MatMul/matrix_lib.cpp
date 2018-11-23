@@ -122,11 +122,11 @@ float error(int N, std::vector<float>& C)
 void results(int N, std::vector<float>& C, double run_time)
 {
 
-    double mflops;
+    double gflops;
     float errsq;
     
-    mflops = 2.0 * N * N * N/(1000000.0f * run_time);
-    printf(" %.2f seconds at %.1f MFLOPS \n",  run_time,mflops);
+    gflops = 2.0 * N * N * N/(1000000000.0f * run_time);
+    printf(" %.4f seconds at %.3f GFLOPS \n",  run_time,gflops);
     errsq = error(N, C);
     if ((errsq!=errsq) || errsq > TOL)
            printf("\n Errors in multiplication: %f\n",errsq);
