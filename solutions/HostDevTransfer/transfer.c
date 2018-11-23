@@ -173,7 +173,7 @@ int main(int argc, char *argv[])
     cl_uint *h_buffer = malloc(sizeof(cl_uint)*bufferSize/4);
 
     printf("Baseline ");
-    runBenchmark(context, queue, fill, d_buffer, h_buffer, false);
+    runBenchmark(context, queue, fill, d_buffer, h_buffer, 0);
 
     free(h_buffer);
   }
@@ -186,7 +186,7 @@ int main(int argc, char *argv[])
     // No separate host buffer needed
 
     printf("Zero-Copy");
-    runBenchmark(context, queue, fill, d_buffer, NULL, true);
+    runBenchmark(context, queue, fill, d_buffer, NULL, 1);
   }
   else
   {
@@ -201,7 +201,7 @@ int main(int argc, char *argv[])
     );
 
     printf("Pinned   ");
-    runBenchmark(context, queue, fill, d_buffer, h_pinned, false);
+    runBenchmark(context, queue, fill, d_buffer, h_pinned, 0);
 
     // Unmap pinned host buffer
     clEnqueueUnmapMemObject(queue, d_pinned, h_pinned, 0, NULL, NULL);
