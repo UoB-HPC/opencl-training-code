@@ -272,7 +272,7 @@ int main(int argc, char *argv[])
             // Work-group computes a block of C.  This size is also set
             // in a #define inside the kernel function.  Note this blocksize
             // must evenly divide the matrix order
-            int blocksize = 16;
+            int blocksize = BLOCKSIZE;
 
             cl::LocalSpaceArg A_block = cl::Local(sizeof(float) * blocksize*blocksize);
             cl::LocalSpaceArg B_block = cl::Local(sizeof(float) * blocksize*blocksize);

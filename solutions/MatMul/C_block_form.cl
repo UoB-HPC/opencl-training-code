@@ -45,7 +45,8 @@
 // It turns out that the compiler generates much better code if
 // we "hardwire" this block size.  16 works well for an NVIDIA 
 // GPU, 32 works well for a CPU
-#define blksz 16
+// BLKSZ must be passed in as a kernel build time constant from the host code
+#define blksz BLKSZ
 
 __kernel void mmul(
                 const unsigned int             N,

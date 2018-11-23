@@ -13,6 +13,8 @@ CFLAGS = -std=c99 -O3 -I ../../common
 CXXFLAGS = -std=c++11 -O3 -I ../../common
 LDFLAGS = -lOpenCL -lrt
 
+DEFINES = 
+
 PLATFORM = $(shell uname -s)
 ifeq ($(PLATFORM), Darwin)
 	LDFLAGS = -framework OpenCL
@@ -23,10 +25,10 @@ EXES = matmul-c matmul-c++
 all: $(EXES)
 
 matmul-c: matmul.c matmul.h matrix_lib.c matrix_lib.h ../../common/*.h
-	$(CC) $(CFLAGS) matmul.c matrix_lib.c $(LDFLAGS) -o $@
+	$(CC) $(DEFINES) $(CFLAGS) matmul.c matrix_lib.c $(LDFLAGS) -o $@
 
 matmul-c++: matmul.cpp matmul.hpp matrix_lib.cpp matrix_lib.hpp ../../common/*.hpp
-	$(CXX) $(CXXFLAGS) matmul.cpp matrix_lib.cpp $(LDFLAGS) -o $@
+	$(CXX) $(DEFINES) $(CXXFLAGS) matmul.cpp matrix_lib.cpp $(LDFLAGS) -o $@
 
 .PHONY: clean
 clean:

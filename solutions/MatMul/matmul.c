@@ -411,8 +411,12 @@ int main(int argc, char *argv[])
     program = clCreateProgramWithSource(context, 1, (const char **) & kernelsource, NULL, &err);
     checkError(err, "Creating program");
 
-   // Build the program
-    err = clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
+    // Setup the kernel build options
+    char options[1024];
+    sprintf(options, "-DBLKSZx=%d", BLOCKSIZE);
+
+    // Build the program
+    err = clBuildProgram(program, 0, NULL, options, NULL, NULL);
     if (err != CL_SUCCESS)
     {
         size_t len;
@@ -428,7 +432,7 @@ int main(int argc, char *argv[])
     kernel = clCreateKernel(program, "mmul", &err);
     checkError(err, "Creating kernel");
 
-    printf("\n===== Parallel matrix mult (blocked), order %d on device ======\n",ORDER);
+    printf("\n===== Parallel matrix mult (blocked %dx%d), order %d on device ======\n",BLOCKSIZE,BLOCKSIZE,ORDER);
 
     // Do the multiplication COUNT times
     for (int i = 0; i < COUNT; i++)
@@ -438,7 +442,7 @@ int main(int argc, char *argv[])
         // Work-group computes a block of C.  This size is also set
         // in a #define inside the kernel function.  Note this blocksize
         // must evenly divide the matrix order
-        int blocksize = 16;
+        int blocksize = BLOCKSIZE;
 
         err =  clSetKernelArg(kernel, 0, sizeof(int),    &N);
         err |= clSetKernelArg(kernel, 1, sizeof(cl_mem), &d_a);
