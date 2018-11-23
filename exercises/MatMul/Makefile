@@ -6,10 +6,11 @@
 # Contributors include Simon McIntosh-Smith, James Price, Tom Deakin and Mike O'Connor.
 #
 
+CC = cc
 CXX = c++
 
-INC = ../../common
-FLAGS = -std=c++11 -O3
+CFLAGS = -std=c99 -O3 -I ../../common
+CXXFLAGS = -std=c++11 -O3 -I ../../common
 LDFLAGS = -lOpenCL -lrt
 
 PLATFORM = $(shell uname -s)
@@ -17,12 +18,17 @@ ifeq ($(PLATFORM), Darwin)
 	LDFLAGS = -framework OpenCL
 endif
 
-SRC = matmul.cpp matrix_lib.cpp
-EXE = matmul
+EXES = matmul-c matmul-c++
 
-$(EXE): $(SRC) matmul.hpp
-	$(CXX) $(FLAGS) -I $(INC) $(SRC) $(LDFLAGS) -o $(EXE)
+all: $(EXES)
 
+matmul-c: matmul.c matmul.h matrix_lib.c matrix_lib.h ../../common/*.h
+	$(CC) $(CFLAGS) matmul.c matrix_lib.c $(LDFLAGS) -o $@
+
+matmul-c++: matmul.cpp matmul.hpp matrix_lib.cpp matrix_lib.hpp ../../common/*.hpp
+	$(CXX) $(CXXFLAGS) matmul.cpp matrix_lib.cpp $(LDFLAGS) -o $@
+
+.PHONY: clean
 clean:
-	rm -f $(EXE)
+	rm -f $(EXES)
 

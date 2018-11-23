@@ -17,6 +17,8 @@ output.bmp
 exercises/DeviceInfo/deviceinfo-c
 exercises/DeviceInfo/deviceinfo-c++
 exercises/VAdd-C/vadd
+exercises/MatMul/matmul-c
+exercises/MatMul/matmul-c++
 exercises/Bilateral/bilateral-c
 exercises/Bilateral/bilateral-c++
 exercises/HostDevTransfer/transfer
