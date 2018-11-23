@@ -88,11 +88,11 @@ int main(int argc, char *argv[])
         for(int i = 0; i < COUNT; i++)
         {
             zero_mat(N, h_C);
-            start_time = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0;
+            start_time = static_cast<double>(timer.getTimeNanoseconds()) / 1000000.0;
 
             seq_mat_mul_sdot(N, h_A, h_B, h_C);
 
-            run_time  = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0 - start_time;
+            run_time  = static_cast<double>(timer.getTimeNanoseconds()) / 1000000.0 - start_time;
             results(N, h_C, run_time);
         }
 
@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
         {
             zero_mat(N, h_C);
 
-            start_time = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0;
+            start_time = static_cast<double>(timer.getTimeNanoseconds()) / 1000000.0;
 
             // Execute the kernel over the entire range of C matrix elements ... computing
             // a dot product for each element of the product matrix.  The local work
@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
 
             queue.finish();
 
-            run_time  = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0 - start_time;
+            run_time  = static_cast<double>(timer.getTimeNanoseconds()) / 1000000.0 - start_time;
 
             cl::copy(queue, d_c, h_C.begin(), h_C.end());
 
@@ -163,7 +163,7 @@ int main(int argc, char *argv[])
         {
             zero_mat(N, h_C);
 
-            start_time = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0;
+            start_time = static_cast<double>(timer.getTimeNanoseconds()) / 1000000.0;
 
             cl::NDRange global(N);
             crow_mmul(cl::EnqueueArgs(queue, global),
@@ -171,7 +171,7 @@ int main(int argc, char *argv[])
 
             queue.finish();
 
-            run_time  = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0 - start_time;
+            run_time  = static_cast<double>(timer.getTimeNanoseconds()) / 1000000.0 - start_time;
 
             cl::copy(queue, d_c, h_C.begin(), h_C.end());
 
@@ -196,7 +196,7 @@ int main(int argc, char *argv[])
         {
             zero_mat(N, h_C);
 
-            start_time = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0;
+            start_time = static_cast<double>(timer.getTimeNanoseconds()) / 1000000.0;
 
             cl::NDRange global(N);
             cl::NDRange local(ORDER / 16);
@@ -205,7 +205,7 @@ int main(int argc, char *argv[])
 
             queue.finish();
 
-            run_time  = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0 - start_time;
+            run_time  = static_cast<double>(timer.getTimeNanoseconds()) / 1000000.0 - start_time;
 
             cl::copy(queue, d_c, h_C.begin(), h_C.end());
 
@@ -230,7 +230,7 @@ int main(int argc, char *argv[])
         {
             zero_mat(N, h_C);
 
-            start_time = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0;
+            start_time = static_cast<double>(timer.getTimeNanoseconds()) / 1000000.0;
 
             cl::NDRange global(N);
             cl::NDRange local(ORDER / 16);
@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
 
             queue.finish();
 
-            run_time  = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0 - start_time;
+            run_time  = static_cast<double>(timer.getTimeNanoseconds()) / 1000000.0 - start_time;
 
             cl::copy(queue, d_c, h_C.begin(), h_C.end());
 
@@ -267,7 +267,7 @@ int main(int argc, char *argv[])
         {
             zero_mat(N, h_C);
 
-            start_time = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0;
+            start_time = static_cast<double>(timer.getTimeNanoseconds()) / 1000000.0;
 
             // Work-group computes a block of C.  This size is also set
             // in a #define inside the kernel function.  Note this blocksize
@@ -291,7 +291,7 @@ int main(int argc, char *argv[])
 
             queue.finish();
 
-            run_time = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0 - start_time;
+            run_time = static_cast<double>(timer.getTimeNanoseconds()) / 1000000.0 - start_time;
 
             cl::copy(queue, d_c, h_C.begin(), h_C.end());
 
