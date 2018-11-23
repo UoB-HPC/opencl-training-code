@@ -121,7 +121,7 @@ void parseArgumentsGeneric(int argc, char *argv[], cl_uint *deviceIndex)
     else if (!strcmp(argv[i], "--help") || !strcmp(argv[i], "-h"))
     {
       printf("\n");
-      printf("Usage: ./program [OPTIONS]\n\n");
+      printf("Usage: ./%s [OPTIONS]\n\n", argv[0]);
       printf("Options:\n");
       printf("  -h  --help               Print this message\n");
       printf("      --list               List available devices\n");
