@@ -34,7 +34,8 @@ solutions/Bilateral/bilateral_opt-c
 solutions/Bilateral/bilateral_opt-c++
 solutions/Bilateral/bilateral_images-c
 solutions/Bilateral/bilateral_images-c++
-solutions/HostDevTransfer/transfer
+solutions/HostDevTransfer/transfer-c
+solutions/HostDevTransfer/transfer-c++
 solutions/NBody-GL-VBO/nbody
 solutions/NBody-GL/nbody
 solutions/NBody/nbody
