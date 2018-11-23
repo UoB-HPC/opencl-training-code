@@ -6,10 +6,11 @@
 # Contributors include Simon McIntosh-Smith, James Price, Tom Deakin and Mike O'Connor.
 #
 
+CC = cc
 CXX = c++
 
-INC = ../../common
-FLAGS = -std=c++11 -O3
+CFLAGS = -std=c99 -O3 -I ../../common
+CXXFLAGS = -std=c++11 -O3 -I ../../common
 LDFLAGS = -lOpenCL -lrt
 
 PLATFORM = $(shell uname -s)
@@ -17,12 +18,17 @@ ifeq ($(PLATFORM), Darwin)
 	LDFLAGS = -framework OpenCL
 endif
 
-SRC = transfer.cpp
-EXE = transfer
+EXES = transfer-c transfer-c++
 
-$(EXE): $(SRC)
-	$(CXX) $(FLAGS) -I $(INC) $(SRC) $(LDFLAGS) -o $(EXE)
+all: $(EXES)
 
+transfer-c: transfer.c ../../common/*.h
+	$(CC) $(CFLAGS) transfer.c $(LDFLAGS) -o $@
+
+transfer-c++: transfer.cpp ../../common/*.hpp
+	$(CXX) $(CXXFLAGS) transfer.cpp $(LDFLAGS) -o $@
+
+.PHONY: clean
 clean:
-	rm -f $(EXE)
+	rm -f $(EXES)
 

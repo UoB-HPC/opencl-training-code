@@ -21,7 +21,8 @@ exercises/MatMul/matmul-c
 exercises/MatMul/matmul-c++
 exercises/Bilateral/bilateral-c
 exercises/Bilateral/bilateral-c++
-exercises/HostDevTransfer/transfer
+exercises/HostDevTransfer/transfer-c
+exercises/HostDevTransfer/transfer-c++
 exercises/NBody-GL/nbody
 exercises/NBody/nbody
 solutions/VAdd_Chain/vadd-c
