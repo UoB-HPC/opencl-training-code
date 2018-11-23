@@ -6,6 +6,7 @@
 //           Modified by Simon McIntosh-Smith, September 2011
 //           Modified by Tom Deakin and Simon McIntosh-Smith, October 2012
 //           Updated to C++ Wrapper v1.2.6 by Tom Deakin, August 2013
+//           Modified to assume square matrices by Simon McIntosh-Smith, Sep 2014
 //
 //------------------------------------------------------------------------------
 

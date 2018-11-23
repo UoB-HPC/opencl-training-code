@@ -52,17 +52,17 @@ void initmat(int N, std::vector<float>& A, std::vector<float>& B, std::vector<fl
 
     /* Initialize matrices */
 
-	for (i = 0; i < N; i++)
-		for (j = 0; j < N; j++)
-			A[i*N+j] = AVAL;
+    for (i = 0; i < N; i++)
+        for (j = 0; j < N; j++)
+            A[i*N+j] = AVAL;
 
-	for (i = 0; i < N; i++)
-		for (j = 0; j < N; j++)
-			B[i*N+j] = BVAL;
+    for (i = 0; i < N; i++)
+        for (j = 0; j < N; j++)
+            B[i*N+j] = BVAL;
 
-	for (i = 0; i < N; i++)
-		for (j = 0; j < N; j++)
-			C[i*N+j] = 0.0f;
+    for (i = 0; i < N; i++)
+        for (j = 0; j < N; j++)
+            C[i*N+j] = 0.0f;
 }
 
 //------------------------------------------------------------------------------
@@ -74,9 +74,9 @@ void zero_mat (int N, std::vector<float>& C)
 {
     int i, j;
 
-	for (i = 0; i < N; i++)
-		for (j = 0; j < N; j++)
-			C[i*N+j] = 0.0f;
+    for (i = 0; i < N; i++)
+        for (j = 0; j < N; j++)
+            C[i*N+j] = 0.0f;
 }
 
 //------------------------------------------------------------------------------
@@ -88,9 +88,9 @@ void trans(int N, std::vector<float>& B, std::vector<float>& Btrans)
 {
     int i, j;
 
-	for (i = 0; i < N; i++)
-		for (j = 0; j < N; j++)
-		    Btrans[j*N+i] = B[i*N+j];
+    for (i = 0; i < N; i++)
+        for (j = 0; j < N; j++)
+            Btrans[j*N+i] = B[i*N+j];
 }
 
 //------------------------------------------------------------------------------
@@ -122,11 +122,11 @@ float error(int N, std::vector<float>& C)
 void results(int N, std::vector<float>& C, double run_time)
 {
 
-    double mflops;
+    double gflops;
     float errsq;
     
-    mflops = 2.0 * N * N * N/(1000000.0f * run_time);
-    printf(" %.2f seconds at %.1f MFLOPS \n",  run_time,mflops);
+    gflops = 2.0 * N * N * N/(1000000000.0f * run_time);
+    printf(" %.4f seconds at %.3f GFLOPS \n",  run_time,gflops);
     errsq = error(N, C);
     if ((errsq!=errsq) || errsq > TOL)
            printf("\n Errors in multiplication: %f\n",errsq);
