@@ -13,7 +13,7 @@ CFLAGS = -std=c99 -O3 -I ../../common
 CXXFLAGS = -std=c++11 -O3 -I ../../common
 LDFLAGS = -lOpenCL -lrt
 
-DEFINES = 
+DEFINES = -DBLOCKSIZE=8
 
 PLATFORM = $(shell uname -s)
 ifeq ($(PLATFORM), Darwin)

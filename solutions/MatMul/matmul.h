@@ -42,6 +42,5 @@ extern double wtime();   // returns time since some fixed past point (wtime.c)
 #define COUNT    1       // number of times to do each multiplication
 #define SUCCESS  1
 #define FAILURE  0
-#define BLOCKSIZE	16
 
 #endif
