@@ -26,6 +26,8 @@ exercises/NBody-GL/nbody
 exercises/NBody/nbody
 solutions/VAdd_Chain/vadd-c
 solutions/VAdd_Chain/vadd-c++
+solutions/MatMul/matmul-c
+solutions/MatMul/matmul-c++
 solutions/Bilateral/bilateral_meta-c
 solutions/Bilateral/bilateral_meta-c++
 solutions/Bilateral/bilateral_opt-c
