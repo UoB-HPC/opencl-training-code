@@ -124,7 +124,7 @@ void results(int N, float *C, double run_time)
     float errsq;
 
     gflops = 2.0 * N * N * N/(1000000000.0f * run_time);
-    printf(" %.4f seconds at %.3f GFLOPS \n",  run_time,gflops);
+    printf(" %.4f seconds at %.3f GFLOP/s \n",  run_time,gflops);
     errsq = error(N, C);
     if (isnan(errsq) || errsq > TOL) {
         printf("\n Errors in multiplication: %f\n",errsq);
