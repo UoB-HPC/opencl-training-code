@@ -413,7 +413,7 @@ int main(int argc, char *argv[])
 
     // Setup the kernel build options
     char options[1024];
-    sprintf(options, "-DBLKSZx=%d", BLOCKSIZE);
+    sprintf(options, "-DBLKSZ=%d", BLOCKSIZE);
 
     // Build the program
     err = clBuildProgram(program, 0, NULL, options, NULL, NULL);
