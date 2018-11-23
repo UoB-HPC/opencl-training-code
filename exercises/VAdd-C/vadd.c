@@ -111,7 +111,7 @@ int main(int argc, char** argv)
     err = clGetPlatformIDs(numPlatforms, platforms, NULL);
     checkError(err, "Getting platforms");
 
-    // Secure a GPU
+    // Secure a device
     for (i = 0; i < numPlatforms; i++)
     {
         err = clGetDeviceIDs(platforms[i], DEVICE, 1, &device_id, NULL);
