@@ -16,11 +16,14 @@ output.bmp
 
 exercises/DeviceInfo/deviceinfo-c
 exercises/DeviceInfo/deviceinfo-c++
+exercises/VAdd-C/vadd
 exercises/Bilateral/bilateral-c
 exercises/Bilateral/bilateral-c++
 exercises/HostDevTransfer/transfer
 exercises/NBody-GL/nbody
 exercises/NBody/nbody
+solutions/VAdd_Chain/vadd-c
+solutions/VAdd_Chain/vadd-c++
 solutions/Bilateral/bilateral_meta-c
 solutions/Bilateral/bilateral_meta-c++
 solutions/Bilateral/bilateral_opt-c
