@@ -57,6 +57,12 @@ double getCurrentTimeNanoseconds()
 #endif
 }
 
+// Utility to return the current time in microseconds since the epoch
+double getCurrentTimeMicroseconds()
+{
+  return getCurrentTimeNanoseconds() / 1e3;
+}
+
 // Utility to return the current time in seconds since the epoch
 double wtime()
 {
