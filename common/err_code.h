@@ -153,7 +153,8 @@ const char *err_code (cl_int err_in)
 }
 
 
-void check_error(cl_int err, const char *operation, char *filename, int line)
+void check_error(cl_int err, const char *operation,
+                 const char *filename, int line)
 {
     if (err != CL_SUCCESS)
     {
