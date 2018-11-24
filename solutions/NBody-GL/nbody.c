@@ -121,7 +121,6 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  // TODO: Make sure we pick GL device?
   device = devices[deviceIndex];
 
   char name[MAX_INFO_STRING];
@@ -182,8 +181,8 @@ int main(int argc, char *argv[])
   char options[256];
   sprintf(options,
           "-cl-fast-relaxed-math -cl-single-precision-constant "
-          "-Dsoftening=%ff -Ddelta=%ff -DWGSIZE=%d",
-          softening, delta, wgsize);
+          "-Dsoftening=%ff -Ddelta=%ff -DWGSIZE=%d %s",
+          softening, delta, wgsize, useLocal ? "-DUSE_LOCAL" : "");
   err = clBuildProgram(program, 1, &device, options, NULL, NULL);
   if (err == CL_BUILD_PROGRAM_FAILURE)
   {
