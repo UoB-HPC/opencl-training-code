@@ -8,8 +8,8 @@
  *
  */
 
-#ifndef __UTIL_HDR
-#define __UTIL_HDR
+#ifndef __UTIL_C_HDR
+#define __UTIL_C_HDR
 
 #include <stdio.h>
 #include <stdlib.h>
