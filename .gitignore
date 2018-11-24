@@ -24,7 +24,10 @@ exercises/Bilateral/bilateral-c
 exercises/Bilateral/bilateral-c++
 exercises/HostDevTransfer/transfer-c
 exercises/HostDevTransfer/transfer-c++
-exercises/NBody-GL/nbody
+exercises/NBody-GL/nbody-c
+exercises/NBody-GL/nbody-c++
+exercises/NBody-GL-VBO/nbody-c
+exercises/NBody-GL-VBO/nbody-c++
 exercises/NBody/nbody
 solutions/VAdd_Chain/vadd-c
 solutions/VAdd_Chain/vadd-c++
@@ -38,7 +41,9 @@ solutions/Bilateral/bilateral_images-c
 solutions/Bilateral/bilateral_images-c++
 solutions/HostDevTransfer/transfer-c
 solutions/HostDevTransfer/transfer-c++
-solutions/NBody-GL-VBO/nbody
-solutions/NBody-GL/nbody
+solutions/NBody-GL-VBO/nbody-c
+solutions/NBody-GL-VBO/nbody-c++
+solutions/NBody-GL/nbody-c
+solutions/NBody-GL/nbody-c++
 solutions/NBody/nbody
 slides/~$advanced_part1.pptx

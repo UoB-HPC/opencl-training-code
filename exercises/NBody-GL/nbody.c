@@ -133,41 +133,11 @@ int main(int argc, char *argv[])
   checkError(err, "getting platform");
 
 
-#if defined(_WIN32)
+  // *********************************
+  // Enable GL sharing in context here
+  // *********************************
 
-  // Windows
-  cl_context_properties properties[] = {
-    CL_GL_CONTEXT_KHR, (cl_context_properties)wglGetCurrentContext(),
-    CL_WGL_HDC_KHR, (cl_context_properties)wglGetCurrentDC(),
-    CL_CONTEXT_PLATFORM, (cl_context_properties)platform,
-    0
-  };
-
-#elif defined(__APPLE__)
-
-  // OS X
-  CGLContextObj     kCGLContext     = CGLGetCurrentContext();
-  CGLShareGroupObj  kCGLShareGroup  = CGLGetShareGroup(kCGLContext);
-
-  cl_context_properties properties[] = {
-    CL_CONTEXT_PROPERTY_USE_CGL_SHAREGROUP_APPLE,
-    (cl_context_properties) kCGLShareGroup,
-    0
-  };
-
-#else
-
-  // Linux
-  cl_context_properties properties[] = {
-    CL_GL_CONTEXT_KHR, (cl_context_properties)glXGetCurrentContext(),
-    CL_GLX_DISPLAY_KHR, (cl_context_properties)glXGetCurrentDisplay(),
-    CL_CONTEXT_PLATFORM, (cl_context_properties)platform,
-    0
-  };
-
-#endif
-
-  context = clCreateContext(properties, 1, &device, NULL, NULL, &err);
+  context = clCreateContext(NULL, 1, &device, NULL, NULL, &err);
   checkError(err, "creating cl/gl shared context");
 
   queue = clCreateCommandQueue(context, device, 0, &err);
@@ -235,9 +205,16 @@ int main(int argc, char *argv[])
   cl_mem d_positionsIn  = d_positions0;
   cl_mem d_positionsOut = d_positions1;
 
-  // Create CL image from GL texture
-  cl_mem d_texture = clCreateFromGLTexture(context, CL_MEM_WRITE_ONLY,
-                                           GL_TEXTURE_2D, 0, textureGL, &err);
+  // **************************************************************
+  // Create CL image from GL texture, instead of a regular CL image
+  // **************************************************************
+  cl_image_format format = {CL_RGBA, CL_UNORM_INT8};
+  cl_image_desc desc = {
+    CL_MEM_OBJECT_IMAGE2D,
+    windowWidth, windowHeight
+  };
+  cl_mem d_texture = clCreateImage(context, CL_MEM_WRITE_ONLY,
+                                   &format, &desc, NULL, &err);
   checkError(err, "creating CL image from GL texture");
 
   err  = clSetKernelArg(fillKernel, 0, sizeof(cl_mem), &d_texture);
@@ -267,10 +244,9 @@ int main(int argc, char *argv[])
                                   1, NULL, global, local, 0, NULL, NULL);
     checkError(err, "enqueuing nbody kernel");
 
-    // Flush GL queue and acquire texture
-    glFlush();
-    err = clEnqueueAcquireGLObjects(queue, 1, &d_texture, 0, NULL, NULL);
-    checkError(err, "acquiring GL objects");
+    // ***********************
+    // Acquire texture from GL
+    // ***********************
 
     // Fill texture with a blank color
     err = clEnqueueNDRangeKernel(queue, fillKernel,
@@ -283,13 +259,9 @@ int main(int argc, char *argv[])
                                  1, NULL, global, local, 0, NULL, NULL);
     checkError(err, "enqueuing draw kernel");
 
-    // Release texture
-    err = clEnqueueReleaseGLObjects(queue, 1, &d_texture, 0, NULL, NULL);
-    checkError(err, "releasing GL objects");
-
-    // Finish CL queue
-    err = clFinish(queue);
-    checkError(err, "finishing CL queue");
+    // **************************
+    // Release texture back to GL
+    // **************************
 
     // Render the texture as a quad filling the window
     glEnable(GL_TEXTURE_2D);

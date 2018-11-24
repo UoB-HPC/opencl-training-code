@@ -12,10 +12,11 @@
  *
  */
 
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <string>
 #include <sys/time.h>
 
 #include <SDL2/SDL.h>
@@ -35,6 +36,11 @@
 
 #include <device_picker.h>
 #include <util.h>
+#include <util.hpp>
+
+#define GLM_FORCE_RADIANS
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 #ifndef M_PI
   #define M_PI 3.14159265358979323846
@@ -51,12 +57,12 @@ void     runReference(const float *initialPositions,
 // Simulation parameters, with default values.
 cl_uint  deviceIndex   =      0;
 cl_uint  numBodies     =   4096;
-cl_float delta         =      0.1f;
-cl_float softening     =     10.f;
+cl_float delta         =      0.0001f;
+cl_float softening     =      0.05f;
 cl_uint  iterations    =     16;
-float    sphereRadius  =    128;
+float    sphereRadius  =      0.8f;
 float    tolerance     =      0.01f;
-unsigned wgsize        =     64;
+unsigned wgsize        =     16;
 int      useLocal      =      0;
 unsigned init2D        =      0;
 cl_uint  windowWidth   =    640;
@@ -65,7 +71,11 @@ cl_uint  windowHeight  =    480;
 // SDL/GL objects
 SDL_Window    *window;
 SDL_GLContext  contextGL;
-GLuint         textureGL;
+static struct
+{
+  GLuint program;
+  GLuint positions[2];
+} gl;
 
 int main(int argc, char *argv[])
 {
@@ -74,7 +84,7 @@ int main(int argc, char *argv[])
   cl_context       context;
   cl_command_queue queue;
   cl_program       program;
-  cl_kernel        nbodyKernel, fillKernel, drawKernel;
+  cl_kernel        nbodyKernel;
   double           start, end;
 
   parseArguments(argc, argv);
@@ -83,9 +93,8 @@ int main(int argc, char *argv[])
 
   // Initialize host data
   size_t dataSize            = numBodies*sizeof(cl_float4);
-  float *h_initialPositions  = malloc(dataSize);
-  float *h_initialVelocities = malloc(dataSize);
-  float *h_positions         = NULL;
+  float *h_initialPositions  = (float*)malloc(dataSize);
+  float *h_initialVelocities = (float*)malloc(dataSize);
   for (int i = 0; i < numBodies; i++)
   {
     if (init2D)
@@ -123,51 +132,41 @@ int main(int argc, char *argv[])
 
   device = devices[deviceIndex];
 
+  char extensions[1024];
+  err = clGetDeviceInfo(device, CL_DEVICE_EXTENSIONS, 1024, extensions, NULL);
+  checkError(err, "getting device extensions");
+
+#if defined(__APPLE__)
+  bool useGLInterop = strstr(extensions, "cl_APPLE_gl_sharing") != NULL;
+#else
+  bool useGLInterop = strstr(extensions, "cl_khr_gl_sharing") != NULL);
+#endif
+
+
+  // *********************************
+  // DELETE ME!
+  // *********************************
+  useGLInterop = 0;
+
+
+
   char name[MAX_INFO_STRING];
   getDeviceName(device, name);
   printf("\nUsing OpenCL device: %s\n", name);
+  if (!useGLInterop)
+    printf("WARNING: CL/GL not supported\n");
 
   cl_platform_id platform;
   err = clGetDeviceInfo(device, CL_DEVICE_PLATFORM,
                         sizeof(cl_platform_id), &platform, NULL);
   checkError(err, "getting platform");
 
+  // *********************************
+  // Enable GL sharing in context here
+  // *********************************
 
-#if defined(_WIN32)
-
-  // Windows
-  cl_context_properties properties[] = {
-    CL_GL_CONTEXT_KHR, (cl_context_properties)wglGetCurrentContext(),
-    CL_WGL_HDC_KHR, (cl_context_properties)wglGetCurrentDC(),
-    CL_CONTEXT_PLATFORM, (cl_context_properties)platform,
-    0
-  };
-
-#elif defined(__APPLE__)
-
-  // OS X
-  CGLContextObj     kCGLContext     = CGLGetCurrentContext();
-  CGLShareGroupObj  kCGLShareGroup  = CGLGetShareGroup(kCGLContext);
-
-  cl_context_properties properties[] = {
-    CL_CONTEXT_PROPERTY_USE_CGL_SHAREGROUP_APPLE,
-    (cl_context_properties) kCGLShareGroup,
-    0
-  };
-
-#else
-
-  // Linux
-  cl_context_properties properties[] = {
-    CL_GL_CONTEXT_KHR, (cl_context_properties)glXGetCurrentContext(),
-    CL_GLX_DISPLAY_KHR, (cl_context_properties)glXGetCurrentDisplay(),
-    CL_CONTEXT_PLATFORM, (cl_context_properties)platform,
-    0
-  };
-
-#endif
-
-  context = clCreateContext(properties, 1, &device, NULL, NULL, &err);
+  context = clCreateContext(
+    NULL, 1, &device, NULL, NULL, &err);
   checkError(err, "creating cl/gl shared context");
 
   queue = clCreateCommandQueue(context, device, 0, &err);
@@ -189,7 +188,7 @@ int main(int argc, char *argv[])
     size_t sz;
     clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG,
                           0, NULL, &sz);
-    char *buildLog = malloc(++sz);
+    char *buildLog = (char*)malloc(++sz);
     clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG,
                           sz, buildLog, NULL);
     fprintf(stderr, "%s\n", buildLog);
@@ -200,30 +199,44 @@ int main(int argc, char *argv[])
   nbodyKernel = clCreateKernel(program, "nbody", &err);
   checkError(err, "creating nbody kernel");
 
-  fillKernel = clCreateKernel(program, "fillTexture", &err);
-  checkError(err, "creating fill kernel");
-
-  drawKernel = clCreateKernel(program, "drawPositions", &err);
-  checkError(err, "creating draw positions kernel");
-
   // Initialize device buffers
-  cl_mem d_positions0, d_positions1, d_velocities;
+  cl_mem d_positions[2], d_velocities;
 
-  d_positions0 = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR,
-                                dataSize, NULL, &err);
-  checkError(err, "creating d_positions0 buffer");
+  if (useGLInterop)
+  {
+    // **************************************************************
+    // Create CL buffer from GL VBO
+    // **************************************************************
+  }
+  else
+  {
+    d_positions[0] = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR,
+                                  dataSize, NULL, &err);
+    checkError(err, "creating d_positions[0] buffer");
 
-  d_positions1 = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR,
-                                dataSize, NULL, &err);
-  checkError(err, "creating d_positions1 buffer");
+    d_positions[1] = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR,
+                                  dataSize, NULL, &err);
+    checkError(err, "creating d_positions[1] buffer");
+  }
 
   d_velocities = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR,
                                 dataSize, NULL, &err);
   checkError(err, "creating d_velocities buffer");
 
-  err = clEnqueueWriteBuffer(queue, d_positions0, CL_TRUE,
-                             0, dataSize, h_initialPositions, 0, NULL, NULL);
-  checkError(err, "writing d_positions data");
+  if (useGLInterop)
+  {
+    // **************************************************************
+    // Copy initial positions to buffer
+    // Remember to acquire and release
+    // **************************************************************
+  }
+  else
+  {
+    err = clEnqueueWriteBuffer(queue, d_positions[0], CL_TRUE,
+                               0, dataSize, h_initialPositions, 0, NULL, NULL);
+    checkError(err, "writing d_positions data");
+  }
+
   err = clEnqueueWriteBuffer(queue, d_velocities, CL_TRUE,
                              0, dataSize, h_initialVelocities, 0, NULL, NULL);
   checkError(err, "writing d_velocities data");
@@ -232,75 +245,65 @@ int main(int argc, char *argv[])
   err |= clSetKernelArg(nbodyKernel, 3, sizeof(cl_uint), &numBodies);
   checkError(err, "setting nbody kernel args");
 
-  cl_mem d_positionsIn  = d_positions0;
-  cl_mem d_positionsOut = d_positions1;
-
-  // Create CL image from GL texture
-  cl_mem d_texture = clCreateFromGLTexture(context, CL_MEM_WRITE_ONLY,
-                                           GL_TEXTURE_2D, 0, textureGL, &err);
-  checkError(err, "creating CL image from GL texture");
-
-  err  = clSetKernelArg(fillKernel, 0, sizeof(cl_mem), &d_texture);
-  checkError(err, "setting fill kernel args");
-
-  err  = clSetKernelArg(drawKernel, 1, sizeof(cl_mem), &d_texture);
-  err |= clSetKernelArg(drawKernel, 2, sizeof(cl_uint), &windowWidth);
-  err |= clSetKernelArg(drawKernel, 3, sizeof(cl_uint), &windowHeight);
-  checkError(err, "setting draw kernel args");
-
   printf("OpenCL initialization complete.\n\n");
 
 
   // Run simulation
+  unsigned INDEX_IN  = 0;
+  unsigned INDEX_OUT = 1;
   printf("Running simulation...\n");
   start = getCurrentTimeNanoseconds();
   size_t global[1]      = {numBodies};
   size_t local[1]       = {wgsize};
-  size_t textureSize[2] = {windowWidth,windowHeight};
   size_t i;
   for (i = 0; ; i++)
   {
+    // ***********************
+    // Acquire buffers from GL
+    // ***********************
+
     // Enqueue nbody kernel
-    err  = clSetKernelArg(nbodyKernel, 0, sizeof(cl_mem), &d_positionsIn);
-    err |= clSetKernelArg(nbodyKernel, 1, sizeof(cl_mem), &d_positionsOut);
-    err |= clEnqueueNDRangeKernel(queue, nbodyKernel,
+    err  = clSetKernelArg(nbodyKernel, 0, sizeof(cl_mem),
+                          &d_positions[INDEX_IN]);
+    err |= clSetKernelArg(nbodyKernel, 1, sizeof(cl_mem),
+                          &d_positions[INDEX_OUT]);
+    checkError(err, "setting kernel arguments");
+    err = clEnqueueNDRangeKernel(queue, nbodyKernel,
                                   1, NULL, global, local, 0, NULL, NULL);
     checkError(err, "enqueuing nbody kernel");
 
-    // Flush GL queue and acquire texture
-    glFlush();
-    err = clEnqueueAcquireGLObjects(queue, 1, &d_texture, 0, NULL, NULL);
-    checkError(err, "acquiring GL objects");
+    // **************************
+    // Release buffers back to GL
+    // **************************
 
-    // Fill texture with a blank color
-    err = clEnqueueNDRangeKernel(queue, fillKernel,
-                                 2, NULL, textureSize, NULL, 0, NULL, NULL);
-    checkError(err, "enqueueing fill kernel");
+    // Manually copy data into GL vertex buffer if we don't have GL interop
+    if (!useGLInterop)
+    {
+      void *data = clEnqueueMapBuffer(queue, d_positions[INDEX_OUT],
+                                          CL_TRUE, CL_MAP_READ,
+                                          0, numBodies*sizeof(cl_float4),
+                                          0, NULL, NULL, &err);
+      checkError(err, "mapping buffer");
+      glBufferSubData(GL_ARRAY_BUFFER, 0, numBodies*sizeof(cl_float4), data);
 
-    // Draw bodies
-    err = clSetKernelArg(drawKernel, 0, sizeof(cl_mem), &d_positionsOut);
-    err = clEnqueueNDRangeKernel(queue, drawKernel,
-                                 1, NULL, global, local, 0, NULL, NULL);
-    checkError(err, "enqueuing draw kernel");
+      err = clEnqueueUnmapMemObject(queue, d_positions[INDEX_OUT], data,
+                                    0, NULL, NULL);
+      checkError(err, "unmapping buffer");
+    }
 
-    // Release texture
-    err = clEnqueueReleaseGLObjects(queue, 1, &d_texture, 0, NULL, NULL);
-    checkError(err, "releasing GL objects");
+    // Render body positions
+    glUseProgram(gl.program);
 
-    // Finish CL queue
-    err = clFinish(queue);
-    checkError(err, "finishing CL queue");
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
 
-    // Render the texture as a quad filling the window
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, textureGL);
-    glBegin(GL_QUADS);
-      glTexCoord2f(1.0f, 1.0f); glVertex2f( 1.0f,  1.0f);
-      glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f,  1.0f);
-      glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, -1.0f);
-      glTexCoord2f(1.0f, 0.0f); glVertex2f( 1.0f, -1.0f);
-    glEnd();
-    glDisable(GL_TEXTURE_2D);
+    GLint loc = glGetAttribLocation(gl.program, "positions");
+    glBindBuffer(GL_ARRAY_BUFFER, gl.positions[INDEX_OUT]);
+    glEnableVertexAttribArray(loc);
+    glVertexAttribPointer(loc, 4, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDrawArrays(GL_POINTS, 0, numBodies);
 
     // Update window
     SDL_GL_SwapWindow(window);
@@ -311,40 +314,23 @@ int main(int argc, char *argv[])
       break;
     }
 
-    // Swap position buffers
-    cl_mem temp    = d_positionsIn;
-    d_positionsIn  = d_positionsOut;
-    d_positionsOut = temp;
+    // Swap buffers
+    int temp  = INDEX_IN;
+    INDEX_IN  = INDEX_OUT;
+    INDEX_OUT = temp;
   }
-
-  // Read final positions
-  h_positions = clEnqueueMapBuffer(queue, d_positionsIn, CL_FALSE, CL_MAP_READ,
-                                   0, dataSize, 0, NULL, NULL, &err);
-  checkError(err, "mapping positions buffer");
-
-  err = clEnqueueReadBuffer(queue, d_positionsIn, CL_FALSE,
-                            0, dataSize, h_positions, 0, NULL, NULL);
-  checkError(err, "reading final positions");
-
-  err = clFinish(queue);
-  checkError(err, "running kernel");
 
   end = getCurrentTimeNanoseconds();
   printf("OpenCL took %.2lfms\n\n", (end-start)*1e-6);
 
   printf("Average FPS was %.1f\n\n", i / ((end-start)*1e-9));
 
-  // Unmap memory objects
-  err = clEnqueueUnmapMemObject(queue, d_positionsIn, h_positions, 0, NULL, NULL);
-  checkError(err, "unmapping positions buffer");
-
   free(h_initialPositions);
   free(h_initialVelocities);
-  clReleaseMemObject(d_positions0);
-  clReleaseMemObject(d_positions1);
+  clReleaseMemObject(d_positions[0]);
+  clReleaseMemObject(d_positions[1]);
   clReleaseMemObject(d_velocities);
   clReleaseKernel(nbodyKernel);
-  clReleaseKernel(drawKernel);
   clReleaseProgram(program);
   clReleaseCommandQueue(queue);
   clReleaseContext(context);
@@ -410,16 +396,117 @@ void initGraphics()
   // Turn on Vsync
   SDL_GL_SetSwapInterval(1);
 
-  // Create the texture
-  glGenTextures(1, &textureGL);
-  glBindTexture(GL_TEXTURE_2D, textureGL);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, windowWidth, windowHeight, 0,
-               GL_RGBA, GL_UNSIGNED_BYTE, 0);
-  glBindTexture(GL_TEXTURE_2D, 0);
+  #if defined(_WIN32)
+    glewInit();
+  #endif
+
+  // Build vertex shader
+  std::string vert_shader = util::loadProgram("vert_shader.glsl");
+  const char *vert_shader_glsl = vert_shader.c_str();
+  GLuint vertShader = glCreateShader(GL_VERTEX_SHADER);
+  glShaderSource(vertShader, 1, &vert_shader_glsl, NULL);
+  glCompileShader(vertShader);
+  {
+    GLint buildResult = GL_FALSE;
+    glGetShaderiv(vertShader, GL_COMPILE_STATUS, &buildResult);
+    int   buildLogLen = 0;
+    glGetShaderiv(vertShader, GL_INFO_LOG_LENGTH, &buildLogLen);
+    char  *buildLog = new char[buildLogLen];
+	memset(buildLog, 0, buildLogLen);
+    glGetShaderInfoLog(vertShader, buildLogLen, NULL, buildLog);
+    if (GL_TRUE != buildResult)
+    {
+      fprintf(stderr, "Error whilst building vertex shader: \n%s\n", buildLog);
+    }
+    delete[] buildLog;
+  }
+
+  // Build fragment shader
+  std::string frag_shader = util::loadProgram("frag_shader.glsl");
+  const char *frag_shader_glsl = frag_shader.c_str();
+  GLuint fragShader = glCreateShader(GL_FRAGMENT_SHADER);
+  glShaderSource(fragShader, 1, &frag_shader_glsl, NULL);
+  glCompileShader(fragShader);
+  {
+    GLint buildResult = GL_FALSE;
+    glGetShaderiv(fragShader, GL_COMPILE_STATUS, &buildResult);
+    int   buildLogLen = 0;
+    glGetShaderiv(fragShader, GL_INFO_LOG_LENGTH, &buildLogLen);
+    char *buildLog = new char[buildLogLen];
+    memset(buildLog, 0, buildLogLen);
+    glGetShaderInfoLog(fragShader, buildLogLen, NULL, buildLog);
+    if (GL_TRUE != buildResult)
+    {
+      fprintf(stderr, "Error whilst building fragment shader: \n%s\n", buildLog);
+    }
+    delete[] buildLog;
+  }
+
+  // Create progam
+  gl.program = glCreateProgram();
+  glAttachShader(gl.program, vertShader);
+  glAttachShader(gl.program, fragShader);
+  glLinkProgram(gl.program);
+  {
+    GLint linkResult = GL_FALSE;
+    glGetProgramiv(gl.program, GL_LINK_STATUS, &linkResult);
+    int   linkLogLen = 0;
+    glGetProgramiv(gl.program, GL_INFO_LOG_LENGTH, &linkLogLen);
+    char *linkLog = new char[linkLogLen];
+    memset(linkLog, 0, linkLogLen);
+    glGetProgramInfoLog(gl.program, linkLogLen, NULL, linkLog);
+    if (GL_TRUE != linkResult)
+    {
+      fprintf(stderr, "Unable to link shaders:\n%s\n", linkLog);
+      exit(1);
+    }
+    delete[] linkLog;
+  }
+
+  glDeleteShader(vertShader);
+  glDeleteShader(fragShader);
+
+
+  glEnable(GL_POINT_SPRITE);
+  glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
+
+
+  // Generate view matrix
+  glm::vec3 eye = glm::vec3(0, 0, 2);
+  glm::vec3 target = glm::vec3(0, 0, -1000);
+  glm::vec3 up = glm::vec3(0, 1, 0);
+  glm::mat4 viewMatrix = glm::lookAt(eye, target, up);
+
+  // Generate projection matrix
+  float fov          = 2.0f * atan(1.0f / eye.z);
+  float aspectRatio  = windowWidth/(float)windowHeight;
+  float nearPlane    = 0.1f;
+  float farPlane     = 50.f;
+  glm::mat4 projMatrix = glm::perspective(fov, aspectRatio, nearPlane, farPlane);
+
+  glm::mat4 vpMatrix = projMatrix * viewMatrix;
+
+  glUseProgram(gl.program);
+  glUniformMatrix4fv(glGetUniformLocation(gl.program, "vpMatrix"),
+                     1, GL_FALSE, &vpMatrix[0][0]);
+  glUniform3fv(glGetUniformLocation(gl.program, "eyePosition"), 1, &eye[0]);
+  glUniform1f(glGetUniformLocation(gl.program, "pointScale"), 20.f);
+  glUniform1f(glGetUniformLocation(gl.program, "sightRange"), 3.f);
+
+
+  // Create buffers
+  glGenBuffers(2, gl.positions);
+
+  glBindBuffer(GL_ARRAY_BUFFER, gl.positions[0]);
+  glBufferData(GL_ARRAY_BUFFER, numBodies*sizeof(cl_float4),
+               NULL, GL_DYNAMIC_DRAW);
+  glBindBuffer(GL_ARRAY_BUFFER, gl.positions[1]);
+  glBufferData(GL_ARRAY_BUFFER, numBodies*sizeof(cl_float4),
+               NULL, GL_DYNAMIC_DRAW);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 int parseFloat(const char *str, cl_float *output)
@@ -570,9 +657,9 @@ void runReference(const float *initialPositions,
                   float *finalPositions)
 {
   size_t dataSize     = numBodies*4*sizeof(float);
-  float *positionsIn  = malloc(dataSize);
-  float *positionsOut = malloc(dataSize);
-  float *velocities   = malloc(dataSize);
+  float *positionsIn  = (float*)malloc(dataSize);
+  float *positionsOut = (float*)malloc(dataSize);
+  float *velocities   = (float*)malloc(dataSize);
 
   memcpy(positionsIn, initialPositions, dataSize);
   memcpy(velocities, initialVelocities, dataSize);

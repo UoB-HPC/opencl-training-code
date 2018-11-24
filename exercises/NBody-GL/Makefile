@@ -6,11 +6,14 @@
 # Contributors include Simon McIntosh-Smith, James Price, Tom Deakin and Mike O'Connor.
 #
 
+CC = cc
 CXX = c++
 
 INC = ../../common
-FLAGS = -std=c++11 -O3
-LDFLAGS = -lm -lOpenCL -lGL -lrt
+CFLAGS = -std=c99 -O3
+CXXFLAGS = -std=c++11 -O3
+LIBS = -lm
+LDFLAGS = -lOpenCL -lGL -lrt
 
 PLATFORM = $(shell uname -s)
 ifeq ($(PLATFORM), Darwin)
@@ -24,12 +27,15 @@ else
 	LDFLAGS += $(shell sdl2-config --cflags --libs)
 endif
 
-SRC = nbody.cpp
-EXE = nbody
+EXES = nbody-c nbody-c++
 
-$(EXE): $(SRC)
-	$(CXX) $(FLAGS) -I $(INC) $(SRC) $(LDFLAGS) -o $(EXE)
+all: $(EXES)
+
+nbody-c: nbody.c
+	$(CC) $(CFLAGS) -I $(INC) $< $(LIBS) $(LDFLAGS) -o $@
+
+nbody-c++: nbody.cpp
+	$(CXX) $(CXXFLAGS) -I $(INC) $< $(LIBS) $(LDFLAGS) -o $@
 
 clean:
-	rm -f $(EXE)
-
+	rm -f $(EXES)
