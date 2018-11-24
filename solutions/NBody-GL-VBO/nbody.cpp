@@ -256,7 +256,6 @@ int main(int argc, char *argv[])
     startTime = timer.getTimeMicroseconds();
     cl::NDRange global(numBodies);
     cl::NDRange local(wgsize);
-    cl::NDRange textureSize(windowWidth, windowHeight);
     size_t i;
     for (i = 0; ; i++)
     {
