@@ -11,6 +11,7 @@ Release/
 
 *.sublime-project
 *.sublime-workspace
+.clang_complete
 
 output.bmp
 
