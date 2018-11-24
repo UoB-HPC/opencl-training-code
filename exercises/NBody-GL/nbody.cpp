@@ -17,23 +17,24 @@
 #include <sstream>
 #include <vector>
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
+#undef main
+
 #define CL_HPP_ENABLE_EXCEPTIONS
 #define CL_HPP_TARGET_OPENCL_VERSION 120
 #define CL_HPP_MINIMUM_OPENCL_VERSION 120
 #include <CL/cl2.hpp>
 
 
-#include "SDL2/SDL.h"
-#include "SDL2/SDL_opengl.h"
-#undef main
-
 #if !defined(_WIN32) && !defined(__APPLE__)
-    #include <GL/glx.h>
+  #include <GL/glx.h>
 #endif
 
 #ifdef __APPLE__
   #include <OpenGL/OpenGL.h>
 #endif
+
 
 
 #include "util.hpp"
@@ -42,6 +43,10 @@
 
 #ifndef M_PI
   #define M_PI 3.14159265358979323846f
+#endif
+
+#if !defined(CL_VERSION_1_2)
+  #define ImageGL Image2DGL
 #endif
 
 int      handleSDLEvents();
@@ -123,6 +128,9 @@ int main(int argc, char *argv[])
 
     std::string name = getDeviceName(device);
     std::cout << std::endl << "Using OpenCL device: " << name << std::endl;
+
+    cl_platform_id platform;
+    device.getInfo(CL_DEVICE_PLATFORM, &platform);
 
     // *********************************
     // Enable GL sharing in context here

@@ -1,3 +1,7 @@
+//
+// OpenCL NBody example
+//
+
 /*
  *
  * This code is released under the "attribution CC BY" creative commons license.
@@ -7,10 +11,6 @@
  * Contributors include Simon McIntosh-Smith, James Price, Tom Deakin and Mike O'Connor.
  *
  */
-
-//
-// OpenCL NBody example
-//
 
 #include <cmath>
 #include <iostream>
@@ -22,28 +22,25 @@
 #define CL_HPP_MINIMUM_OPENCL_VERSION 120
 #include <CL/cl2.hpp>
 
-
 #if defined(_WIN32)
   #define GLEW_STATIC
   #include <GL/glew.h>
 #endif
 
 #if !defined(_WIN32) && !defined(__APPLE__)
-    #define GL_GLEXT_PROTOTYPES
-    #include <GL/gl.h>
-    #include <GL/glx.h>
-    #include <GL/glext.h>
+  #define GL_GLEXT_PROTOTYPES
+  #include <GL/gl.h>
+  #include <GL/glx.h>
+  #include <GL/glext.h>
 #endif
 
 #ifdef __APPLE__
   #include <OpenGL/OpenGL.h>
 #endif
 
-
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 #undef main
-
 
 #include "util.hpp"
 #include "err_code.h"
@@ -158,6 +155,9 @@ int main(int argc, char *argv[])
     if (!useGLInterop)
       std::cout << "WARNING: CL/GL not supported" << std::endl;
 
+    cl_platform_id platform;
+    device.getInfo(CL_DEVICE_PLATFORM, &platform);
+
     // *********************************
     // Enable GL sharing in context here
     // *********************************
@@ -232,7 +232,6 @@ int main(int argc, char *argv[])
     startTime = timer.getTimeMicroseconds();
     cl::NDRange global(numBodies);
     cl::NDRange local(wgsize);
-    cl::NDRange textureSize(windowWidth, windowHeight);
     size_t i;
     for (i = 0; ; i++)
     {

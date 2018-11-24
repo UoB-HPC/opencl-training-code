@@ -34,7 +34,7 @@
   #include <GL/glext.h>
 #endif
 
-#if defined( __APPLE__)
+#ifdef __APPLE__
   #include <OpenGL/OpenGL.h>
 #endif
 
