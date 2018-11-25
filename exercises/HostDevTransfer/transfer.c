@@ -111,9 +111,9 @@ void runBenchmark(cl_context context, cl_command_queue queue,
   }
   else
   {
-    printf("   %6.2lfs", seconds);
-    printf("   %7.2lfs", transferTime*1e-6);
-    printf("   %8.2lf GB/s", bandwidth);
+    printf("   -s");
+    printf("   -s");
+    printf("   - GB/s");
     printf("   FAILED\n");
   }
 }
@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
   err = clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
   cl_kernel fill = clCreateKernel(program, "fill", &err);
 
-  
+
   printf("Type          Total   Transfer       Bandwidth\n"
          "----------------------------------------------\n");
 
