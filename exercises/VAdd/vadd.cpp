@@ -74,7 +74,7 @@ int main(void)
 
         // Create the kernel functor
 
-        cl::KernelFunctor<cl::Buffer, cl::Buffer, cl::Buffer> vadd(program, "vadd");
+        cl::KernelFunctor<cl::Buffer, cl::Buffer, cl::Buffer, int> vadd(program, "vadd");
 
         d_a   = cl::Buffer(context, h_a.begin(), h_a.end(), true);
         d_b   = cl::Buffer(context, h_b.begin(), h_b.end(), true);
@@ -84,10 +84,13 @@ int main(void)
         util::Timer timer;
 
         vadd(
-            cl::EnqueueArgs(queue,cl::NDRange(count)),
+            cl::EnqueueArgs(
+                queue,
+                cl::NDRange(count)),
             d_a,
             d_b,
-            d_c);
+            d_c,
+            count);
 
         queue.finish();
 
