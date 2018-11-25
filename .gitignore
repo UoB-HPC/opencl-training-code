@@ -49,3 +49,5 @@ solutions/NBody/nbody
 slides/~$advanced_part1.pptx
 exercises/Pi/pi
 solutions/Pi/pi_ocl
+exercises/VAdd/vadd-c
+exercises/VAdd/vadd-c++
