@@ -47,17 +47,15 @@
 // output: c float vector of length count holding the sum a + b
 //
 
-const char *KernelSource =                                             "\n" \
-"__kernel void vadd(                                                    \n" \
-"   __global float* a,                                                  \n" \
-"   __global float* b,                                                  \n" \
-"   __global float* c,                                                  \n" \
-"   const unsigned int count)                                           \n" \
-"{                                                                      \n" \
-"   int i = get_global_id(0);                                           \n" \
-"   if(i < count)                                                       \n" \
-"       c[i] = a[i] + b[i];                                             \n" \
-"}                                                                      \n" \
+const char *KernelSource =           "\n" \
+"__kernel void vadd(                 \n" \
+"   __global float* a,               \n" \
+"   __global float* b,               \n" \
+"   __global float* c)               \n" \
+"{                                   \n" \
+"   int i = get_global_id(0);        \n" \
+"   c[i] = a[i] + b[i];              \n" \
+"}                                   \n" \
 "\n";
 
 //------------------------------------------------------------------------------
@@ -177,7 +175,6 @@ int main(int argc, char** argv)
     err  = clSetKernelArg(ko_vadd, 0, sizeof(cl_mem), &d_a);
     err |= clSetKernelArg(ko_vadd, 1, sizeof(cl_mem), &d_b);
     err |= clSetKernelArg(ko_vadd, 2, sizeof(cl_mem), &d_c);
-    err |= clSetKernelArg(ko_vadd, 3, sizeof(unsigned int), &count);
     checkError(err, "Setting kernel arguments");
 
     // Execute the kernel over the entire range of our 1d input data set
