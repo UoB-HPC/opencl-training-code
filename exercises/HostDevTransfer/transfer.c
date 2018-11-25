@@ -59,7 +59,6 @@ void runBenchmark(cl_context context, cl_command_queue queue,
                   int zeroCopy)
 {
   int pass = 1;
-  double start, stop;
   double transferTime = 0.0;
   double startTime = getCurrentTimeMicroseconds();
   for (cl_uint i = 0; i < iterations; i++)
