@@ -26,6 +26,8 @@
 #include <util.hpp>
 #include "device_picker.hpp"
 
+#include <sstream>
+
 int main(int argc, char *argv[])
 {
 
@@ -255,12 +257,16 @@ int main(int argc, char *argv[])
 //--------------------------------------------------------------------------------
 
         // Create the compute program from the source buffer
-        program = cl::Program(context, util::loadProgram("C_block_form.cl"), true);
+        program = cl::Program(context, util::loadProgram("C_block_form.cl"));
+        std::stringstream options;
+        options << "-DBLKSZ=" << BLOCKSIZE;
+        program.build(options.str().c_str());
+
 
         // Create the compute kernel from the program
         cl::KernelFunctor<int, cl::Buffer, cl::Buffer, cl::Buffer, cl::LocalSpaceArg, cl::LocalSpaceArg> block_mmul(program, "mmul");
 
-        printf("\n===== Parallel matrix mult (blocked), order %d on device ======\n",ORDER);
+        printf("\n===== Parallel matrix mult (blocked %dx%d), order %d on device ======\n",BLOCKSIZE,BLOCKSIZE,ORDER);
 
         // Do the multiplication COUNT times
         for (int i = 0; i < COUNT; i++)
