@@ -47,8 +47,8 @@
 // output: c float vector of length count holding the sum a + b
 //
 
-const char *KernelSource = "\n" \
-"__kernel void vadd(                                                 \n" \
+const char *KernelSource =                                             "\n" \
+"__kernel void vadd(                                                    \n" \
 "   __global float* a,                                                  \n" \
 "   __global float* b,                                                  \n" \
 "   __global float* c,                                                  \n" \

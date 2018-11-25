@@ -6,10 +6,12 @@
 # Contributors include Simon McIntosh-Smith, James Price, Tom Deakin and Mike O'Connor.
 #
 
+CC = cc
 CXX = c++
 
 INC = ../../common
-FLAGS = -std=c++11 -O3
+CFLAGS = -O3
+CXXFLAGS = -std=c++11 -O3
 LDFLAGS = -lOpenCL -lrt
 
 PLATFORM = $(shell uname -s)
@@ -17,12 +19,19 @@ ifeq ($(PLATFORM), Darwin)
 	LDFLAGS = -framework OpenCL
 endif
 
-SRC = vadd.cpp
-EXE = vadd
+SRC = vadd.cpp vadd.c
+EXES = vadd-c vadd-c++
 
-$(EXE): $(SRC)
-	$(CXX) $(FLAGS) -I $(INC) $(SRC) $(LDFLAGS) -o $(EXE)
+all: $(EXES)
+
+vadd-c: vadd.c ../../common/*.h
+	$(CC) $(CFLAGS) -I $(INC) vadd.c $(LDFLAGS) -o $@
+
+vadd-c++: vadd.cpp ../../common/*.hpp
+	$(CXX) $(CXXFLAGS) -I $(INC) vadd.cpp  $(LDFLAGS) -o $@
+
+.PHONY: clean
 
 clean:
-	rm -f $(EXE)
+	rm -f $(EXES)
 

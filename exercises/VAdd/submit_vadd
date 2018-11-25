@@ -7,4 +7,4 @@
 
 cd $PBS_O_WORKDIR
 
-./vadd
+./vadd-c
