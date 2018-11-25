@@ -8,7 +8,6 @@
 
 PROJECTS = \
 	DeviceInfo \
-	VAdd-C \
 	VAdd \
 	MatMul \
 	Pi \
