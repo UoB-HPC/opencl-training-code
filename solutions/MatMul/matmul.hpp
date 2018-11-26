@@ -45,4 +45,10 @@ extern double wtime();   // returns time since some fixed past point (wtime.c)
 #define SUCCESS  1
 #define FAILURE  0
 
+// Block size for blocked matrix multiply
+// Default value can be override at compile-time with -DBLOCKSIZE=X
+#ifndef BLOCKSIZE
+#define BLOCKSIZE 8
+#endif
+
 #endif
