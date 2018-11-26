@@ -34,7 +34,7 @@ int main(void)
         return EXIT_FAILURE;
     }
     // Create a list of platform IDs
-    cl_platform_id platform[num_platforms];
+    cl_platform_id *platform = calloc(num_platforms, sizeof(cl_platform_id));
     err = clGetPlatformIDs(num_platforms, platform, NULL);
     checkError(err, "Getting platforms");
 
@@ -66,7 +66,7 @@ int main(void)
         checkError(err, "Finding devices");
 
         // Get the device IDs
-        cl_device_id device[num_devices];
+        cl_device_id *device = calloc(num_devices, sizeof(cl_device_id));
         err = clGetDeviceIDs(platform[i], CL_DEVICE_TYPE_ALL, num_devices, device, NULL);
         checkError(err, "Getting devices");
         printf("Number of devices: %d\n", num_devices);
@@ -118,8 +118,8 @@ int main(void)
             err = clGetDeviceInfo(device[j], CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS, sizeof(cl_uint), &num, NULL);
             checkError(err, "Getting device max work-item dims");
             // Get the max. dimensions of the work-groups
-            size_t dims[num];
-            err = clGetDeviceInfo(device[j], CL_DEVICE_MAX_WORK_ITEM_SIZES, sizeof(dims), &dims, NULL);
+            size_t *dims = calloc(num, sizeof(size_t));
+            err = clGetDeviceInfo(device[j], CL_DEVICE_MAX_WORK_ITEM_SIZES, num*sizeof(size_t), dims, NULL);
             checkError(err, "Getting device max work-item sizes");
             printf("\t\tMax Work-group Dims: ( ");
             for (size_t k = 0; k < num; k++)
@@ -133,6 +133,10 @@ int main(void)
 
         printf("\n-------------------------\n");
     }
+
+#if defined(_WIN32) && !defined(__MINGW32__)
+	system("pause");
+#endif
 
     return EXIT_SUCCESS;
 }

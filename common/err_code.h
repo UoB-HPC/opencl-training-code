@@ -161,6 +161,9 @@ void check_error(cl_int err, const char *operation,
         fprintf(stderr, "Error during operation '%s', ", operation);
         fprintf(stderr, "in '%s' on line %d\n", filename, line);
         fprintf(stderr, "Error code was \"%s\" (%d)\n", err_code(err), err);
+#if defined(_WIN32) && !defined(__MINGW32__)
+        system("pause");
+#endif
         exit(EXIT_FAILURE);
     }
 }

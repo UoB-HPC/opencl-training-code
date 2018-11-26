@@ -7,7 +7,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="vadd.c">
+    <ClCompile Include="..\deviceinfo.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -216,5 +216,9 @@ int main(int argc, char *argv[])
     clReleaseCommandQueue(commands);
     clReleaseContext(context);
 
+#if defined(_WIN32) && !defined(__MINGW32__)
+	system("pause");
+#endif
+
     return EXIT_SUCCESS;
 }

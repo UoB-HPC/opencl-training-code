@@ -11,9 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{7FCBB2A8-2D2A-4220-BA69-641174C5482E}</ProjectGuid>
+    <ProjectGuid>{EA63A45D-87BE-47F7-9520-02171E4CABB5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>MatMul</RootNamespace>
+    <RootNamespace>DeviceInfo</RootNamespace>
+    <ProjectName>DeviceInfo-C++</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -53,7 +54,8 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -68,7 +70,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -78,15 +80,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="kernel.cl" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="matmul.cpp" />
-    <ClCompile Include="matrix_lib.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="matmul.hpp" />
-    <ClInclude Include="matrix_lib.hpp" />
+    <ClCompile Include="deviceinfo.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

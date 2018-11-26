@@ -11,9 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{F0CF02C9-FBE2-4864-88B9-44697A2A25F8}</ProjectGuid>
+    <ProjectGuid>{7FCBB2A8-2D2A-4220-BA69-641174C5482E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Pi</RootNamespace>
+    <RootNamespace>MatMul</RootNamespace>
+    <ProjectName>MatMul-C++</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -78,7 +79,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="pi.cpp" />
+    <None Include="kernel.cl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="matmul.cpp" />
+    <ClCompile Include="matrix_lib.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="matmul.hpp" />
+    <ClInclude Include="matrix_lib.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
