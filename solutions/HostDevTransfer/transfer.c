@@ -24,6 +24,7 @@
 
 #include <device_picker.h>
 #include <util.h>
+#include <err_code.h>
 
 void parseArguments(int argc, char *argv[]);
 
@@ -58,6 +59,7 @@ void runBenchmark(cl_context context, cl_command_queue queue,
                   cl_uint *h_buffer, // host buffer, ignored for zero-copy
                   int zeroCopy)
 {
+  cl_int err;
   int pass = 1;
   double transferTime = 0.0;
   double startTime = getCurrentTimeMicroseconds();
@@ -65,22 +67,28 @@ void runBenchmark(cl_context context, cl_command_queue queue,
   {
     // Run fill kernel
     size_t global[] = {bufferSize/4};
-    clSetKernelArg(fill, 0, sizeof(cl_mem), &d_buffer);
-    clSetKernelArg(fill, 1, sizeof(cl_uint), &i);
-    clEnqueueNDRangeKernel(queue, fill, 1, 0, global, NULL, 0, NULL, NULL);
-    clFinish(queue);
+    err = clSetKernelArg(fill, 0, sizeof(cl_mem), &d_buffer);
+    err |= clSetKernelArg(fill, 1, sizeof(cl_uint), &i);
+    check_error(err, "Setting kernel arguments", __FILE__, __LINE__);
+
+    err = clEnqueueNDRangeKernel(queue, fill, 1, 0, global, NULL, 0, NULL, NULL);
+    check_error(err, "Enqueueing kernel", __FILE__, __LINE__);
+    err = clFinish(queue);
+    check_error(err, "Finishing queue", __FILE__, __LINE__);
 
     double startTransfer = getCurrentTimeMicroseconds();
 
     if (zeroCopy)
     {
       // Map device buffer to get host pointer
-      h_buffer = clEnqueueMapBuffer(queue, d_buffer, CL_TRUE, CL_MAP_READ, 0, bufferSize, 0, NULL, NULL, NULL);
+      h_buffer = clEnqueueMapBuffer(queue, d_buffer, CL_TRUE, CL_MAP_READ, 0, bufferSize, 0, NULL, NULL, &err);
+      check_error(err, "Enqueueing map buffer", __FILE__, __LINE__);
     }
     else
     {
       // Read data from device buffer to host buffer
       clEnqueueReadBuffer(queue, d_buffer, CL_TRUE, 0, bufferSize, h_buffer, 0, NULL, NULL);
+      check_error(err, "Enqueueing read buffer", __FILE__, __LINE__);
     }
     double endTransfer = getCurrentTimeMicroseconds();
 
@@ -91,11 +99,13 @@ void runBenchmark(cl_context context, cl_command_queue queue,
     {
       // Unmap host pointer
       clEnqueueUnmapMemObject(queue, d_buffer, h_buffer, 0, NULL, NULL);
+      check_error(err, "Unmapping buffer", __FILE__, __LINE__);
     }
 
     transferTime += (endTransfer - startTransfer);
   }
-  clFinish(queue);
+  err = clFinish(queue);
+  check_error(err, "Finishing queue", __FILE__, __LINE__);
 
   // Print stats
   double endTime  = getCurrentTimeMicroseconds();
@@ -120,6 +130,8 @@ void runBenchmark(cl_context context, cl_command_queue queue,
 
 int main(int argc, char *argv[])
 {
+  cl_int err;
+
   parseArguments(argc, argv);
 
   // Get list of devices
@@ -142,7 +154,9 @@ int main(int argc, char *argv[])
   printf("Iterations = %u\n", iterations);
 
   cl_bool unifiedMemory;
-  clGetDeviceInfo(device, CL_DEVICE_HOST_UNIFIED_MEMORY, sizeof(cl_bool), &unifiedMemory, NULL);
+  err = clGetDeviceInfo(device, CL_DEVICE_HOST_UNIFIED_MEMORY, sizeof(cl_bool), &unifiedMemory, NULL);
+  check_error(err, "Query device for unified memory", __FILE__, __LINE__);
+
   if (unifiedMemory)
     printf("Device has host-unified memory\n\n");
   else
@@ -151,12 +165,29 @@ int main(int argc, char *argv[])
   // Convert buffer size to bytes
   bufferSize *= 1024*1024;
 
-  cl_int err;
   cl_context context = clCreateContext(0, 1, &device, NULL, NULL, &err);
+  check_error(err, "Creating context", __FILE__, __LINE__);
+
   cl_command_queue queue = clCreateCommandQueue(context, device, 0, &err);
+  check_error(err, "Creating command queue", __FILE__, __LINE__);
+
   cl_program program = clCreateProgramWithSource(context, 1, (const char **)&kernel_source, NULL, &err);
+  check_error(err, "Creating program", __FILE__, __LINE__);
+
   err = clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
+  if (err != CL_SUCCESS)
+  {
+      size_t len;
+      char buffer[2048];
+
+      printf("Error: Failed to build program executable!\n%s\n", err_code(err));
+      clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, sizeof(buffer), buffer, &len);
+      printf("%s\n", buffer);
+      return EXIT_FAILURE;
+  }
+
   cl_kernel fill = clCreateKernel(program, "fill", &err);
+  check_error(err, "Creating kernel", __FILE__, __LINE__);
 
 
   printf("Type          Total   Transfer       Bandwidth\n"
@@ -166,7 +197,8 @@ int main(int argc, char *argv[])
   // Baseline - using a regular buffer with enqueueReadBuffer
   {
     // Create device buffer
-    cl_mem d_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE, bufferSize, NULL, NULL);
+    cl_mem d_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE, bufferSize, NULL, &err);
+    check_error(err, "Creating buffer", __FILE__, __LINE__);
 
     // Create host buffer
     cl_uint *h_buffer = malloc(sizeof(cl_uint)*bufferSize/4);
@@ -180,7 +212,8 @@ int main(int argc, char *argv[])
   if (unifiedMemory)
   {
     // Create a host-accessible device buffer
-    cl_mem d_buffer = clCreateBuffer(context, CL_MEM_ALLOC_HOST_PTR, bufferSize, NULL, NULL);
+    cl_mem d_buffer = clCreateBuffer(context, CL_MEM_ALLOC_HOST_PTR, bufferSize, NULL, &err);
+    check_error(err, "Creating buffer", __FILE__, __LINE__);
 
     // No separate host buffer needed
 
@@ -190,20 +223,25 @@ int main(int argc, char *argv[])
   else
   {
     // Create device buffer
-    cl_mem d_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE, bufferSize, NULL, NULL);
+    cl_mem d_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE, bufferSize, NULL, &err);
+    check_error(err, "Creating buffer", __FILE__, __LINE__);
 
     // Create a pinned host buffer (using a mapped device buffer)
-    cl_mem d_pinned = clCreateBuffer(context, CL_MEM_ALLOC_HOST_PTR, bufferSize, NULL, NULL);
+    cl_mem d_pinned = clCreateBuffer(context, CL_MEM_ALLOC_HOST_PTR, bufferSize, NULL, &err);
+    check_error(err, "Creating buffer", __FILE__, __LINE__);
+
     cl_uint *h_pinned = (cl_uint*)clEnqueueMapBuffer(queue,
       d_pinned, CL_TRUE, CL_MAP_READ, 0, bufferSize,
-      0, NULL, NULL, NULL
+      0, NULL, NULL, &err
     );
+    check_error(err, "Enqueueing map buffer", __FILE__, __LINE__);
 
     printf("Pinned   ");
     runBenchmark(context, queue, fill, d_buffer, h_pinned, 0);
 
     // Unmap pinned host buffer
     clEnqueueUnmapMemObject(queue, d_pinned, h_pinned, 0, NULL, NULL);
+    check_error(err, "Unmapping buffer", __FILE__, __LINE__);
   }
 
 #if defined(_WIN32)
