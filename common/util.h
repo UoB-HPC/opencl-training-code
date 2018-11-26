@@ -15,7 +15,7 @@
 #include <stdlib.h>
 
 #if defined(_WIN32) && !defined(__MINGW32__)
-#include <time.h>
+#include <windows.h>
 #else
 #include <sys/time.h>
 #endif
@@ -49,7 +49,11 @@ char *loadProgram(const char *filename)
 double getCurrentTimeNanoseconds()
 {
 #if defined(_WIN32) && !defined(__MINGW32__)
-  return time(NULL) * 1e9;
+	LARGE_INTEGER StartingTime;
+	LARGE_INTEGER Frequency;
+	QueryPerformanceFrequency(&Frequency);
+	QueryPerformanceCounter(&StartingTime);
+	return (StartingTime.QuadPart * 1e9) / (double)Frequency.QuadPart;
 #else
   struct timeval tv;
   gettimeofday(&tv, NULL);
