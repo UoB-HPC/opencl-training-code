@@ -14,6 +14,7 @@
     <ProjectGuid>{05F59E79-3559-4102-88B6-6530F563F308}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>VAdd_Chain</RootNamespace>
+    <ProjectName>VAdd_Chain-C++</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
