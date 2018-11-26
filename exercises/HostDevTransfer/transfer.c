@@ -69,12 +69,12 @@ void runBenchmark(cl_context context, cl_command_queue queue,
     size_t global[] = {bufferSize/4};
     err = clSetKernelArg(fill, 0, sizeof(cl_mem), &d_buffer);
     err |= clSetKernelArg(fill, 1, sizeof(cl_uint), &i);
-    check_error(err, "Setting kernel arguments", __FILE__, __LINE__);
+    checkError(err, "Setting kernel arguments");
 
     err = clEnqueueNDRangeKernel(queue, fill, 1, 0, global, NULL, 0, NULL, NULL);
-    check_error(err, "Enqueueing kernel", __FILE__, __LINE__);
+    checkError(err, "Enqueueing kernel");
     err = clFinish(queue);
-    check_error(err, "Finishing queue", __FILE__, __LINE__);
+    checkError(err, "Finishing queue");
 
     double startTransfer = getCurrentTimeMicroseconds();
 
@@ -87,7 +87,7 @@ void runBenchmark(cl_context context, cl_command_queue queue,
     {
       // Read data from device buffer to host buffer
       clEnqueueReadBuffer(queue, d_buffer, CL_TRUE, 0, bufferSize, h_buffer, 0, NULL, NULL);
-      check_error(err, "Enqueueing read buffer", __FILE__, __LINE__);
+      checkError(err, "Enqueueing read buffer");
     }
     double endTransfer = getCurrentTimeMicroseconds();
 
@@ -103,7 +103,7 @@ void runBenchmark(cl_context context, cl_command_queue queue,
     transferTime += (endTransfer - startTransfer);
   }
   err = clFinish(queue);
-  check_error(err, "Finishing queue", __FILE__, __LINE__);
+  checkError(err, "Finishing queue");
 
   // Print stats
   double endTime  = getCurrentTimeMicroseconds();
@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
 
   cl_bool unifiedMemory;
   err = clGetDeviceInfo(device, CL_DEVICE_HOST_UNIFIED_MEMORY, sizeof(cl_bool), &unifiedMemory, NULL);
-  check_error(err, "Query device for unified memory", __FILE__, __LINE__);
+  checkError(err, "Query device for unified memory");
 
   if (unifiedMemory)
     printf("Device has host-unified memory\n\n");
@@ -164,13 +164,13 @@ int main(int argc, char *argv[])
   bufferSize *= 1024*1024;
 
   cl_context context = clCreateContext(0, 1, &device, NULL, NULL, &err);
-  check_error(err, "Creating context", __FILE__, __LINE__);
+  checkError(err, "Creating context");
 
   cl_command_queue queue = clCreateCommandQueue(context, device, 0, &err);
-  check_error(err, "Creating command queue", __FILE__, __LINE__);
+  checkError(err, "Creating command queue");
 
   cl_program program = clCreateProgramWithSource(context, 1, (const char **)&kernel_source, NULL, &err);
-  check_error(err, "Creating program", __FILE__, __LINE__);
+  checkError(err, "Creating program");
 
   err = clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
   if (err != CL_SUCCESS)
@@ -185,7 +185,7 @@ int main(int argc, char *argv[])
   }
 
   cl_kernel fill = clCreateKernel(program, "fill", &err);
-  check_error(err, "Creating kernel", __FILE__, __LINE__);
+  checkError(err, "Creating kernel");
 
 
   printf("Type          Total   Transfer       Bandwidth\n"
@@ -196,7 +196,7 @@ int main(int argc, char *argv[])
   {
     // Create device buffer
     cl_mem d_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE, bufferSize, NULL, &err);
-    check_error(err, "Creating buffer", __FILE__, __LINE__);
+    checkError(err, "Creating buffer");
 
     // Create host buffer
     cl_uint *h_buffer = malloc(sizeof(cl_uint)*bufferSize/4);
