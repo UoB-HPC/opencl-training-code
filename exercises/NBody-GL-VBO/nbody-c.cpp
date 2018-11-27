@@ -17,7 +17,22 @@
 #include <cstdlib>
 #include <cstring>
 #include <string>
-#include <sys/time.h>
+
+#if defined(_WIN32)
+#define GLEW_STATIC
+#include <GL/glew.h>
+#endif
+
+#if !defined(_WIN32) && !defined(__APPLE__)
+#define GL_GLEXT_PROTOTYPES
+#include <GL/gl.h>
+#include <GL/glx.h>
+#include <GL/glext.h>
+#endif
+
+#ifdef __APPLE__
+#include <OpenGL/OpenGL.h>
+#endif
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
@@ -25,13 +40,10 @@
 
 #if defined(__APPLE__)
   #include <OpenCL/OpenCL.h>
-  #include <OpenGL/OpenGL.h>
 #else
   #include <CL/cl.h>
   #include <CL/cl_ext.h>
   #include <CL/cl_gl.h>
-  #include <GL/gl.h>
-  #include <GL/glx.h>
 #endif
 
 #include <device_picker.h>
@@ -139,7 +151,7 @@ int main(int argc, char *argv[])
 #if defined(__APPLE__)
   bool useGLInterop = strstr(extensions, "cl_APPLE_gl_sharing") != NULL;
 #else
-  bool useGLInterop = strstr(extensions, "cl_khr_gl_sharing") != NULL);
+  bool useGLInterop = strstr(extensions, "cl_khr_gl_sharing") != NULL;
 #endif
 
 

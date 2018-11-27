@@ -41,6 +41,7 @@
  #include <cstdio>
 #else
  #include <stdio.h>
+ #include <stdlib.h>
 #endif
 
 const char *err_code (cl_int err_in)
