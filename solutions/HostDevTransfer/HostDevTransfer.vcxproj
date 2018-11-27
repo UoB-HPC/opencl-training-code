@@ -14,6 +14,7 @@
     <ProjectGuid>{2CA592D3-28BB-43DC-8BA9-7735066BDA44}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>HostDevTransfer</RootNamespace>
+    <ProjectName>HostDevTransfer-C++</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
