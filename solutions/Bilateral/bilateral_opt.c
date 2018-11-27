@@ -13,6 +13,7 @@
  */
 
 #include <math.h>
+#include <stdint.h>
 #include <stdio.h>
 
 #ifdef USE_SDL

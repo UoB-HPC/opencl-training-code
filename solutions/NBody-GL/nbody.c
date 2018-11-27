@@ -16,7 +16,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/time.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
@@ -30,7 +29,9 @@
   #include <CL/cl_ext.h>
   #include <CL/cl_gl.h>
   #include <GL/gl.h>
+#if !defined(_WIN32)
   #include <GL/glx.h>
+#endif
 #endif
 
 #include <device_picker.h>

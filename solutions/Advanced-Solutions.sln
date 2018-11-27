@@ -1,21 +1,35 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HostDevTransfer", "HostDevTransfer\HostDevTransfer.vcxproj", "{2CA592D3-28BB-43DC-8BA9-7735066BDA44}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HostDevTransfer-C++", "HostDevTransfer\HostDevTransfer.vcxproj", "{2CA592D3-28BB-43DC-8BA9-7735066BDA44}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NBody", "NBody\NBody.vcxproj", "{93DFDE4F-3E88-4C9B-8FB0-3BE6EAEB1346}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NBody-C++", "NBody\NBody.vcxproj", "{93DFDE4F-3E88-4C9B-8FB0-3BE6EAEB1346}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NBody-GL", "NBody-GL\NBody-GL.vcxproj", "{6C34196B-DBA7-4177-94FB-19F917E2204F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NBody-GL-C++", "NBody-GL\NBody-GL.vcxproj", "{6C34196B-DBA7-4177-94FB-19F917E2204F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NBody-GL-VBO", "NBody-GL-VBO\NBody-GL-VBO.vcxproj", "{ACC73CD2-2301-4965-80E2-205DCEC5F5A2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NBody-GL-VBO-C++", "NBody-GL-VBO\NBody-GL-VBO.vcxproj", "{ACC73CD2-2301-4965-80E2-205DCEC5F5A2}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeviceInfo", "..\exercises\DeviceInfo\DeviceInfo-C++.vcxproj", "{EA63A45D-87BE-47F7-9520-02171E4CABB5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeviceInfo-C++", "..\exercises\DeviceInfo\DeviceInfo-C++.vcxproj", "{EA63A45D-87BE-47F7-9520-02171E4CABB5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bilateral-Opt", "Bilateral\Bilateral-Opt.vcxproj", "{82A9E9A5-1A30-479B-BC3E-E46E7C9215F9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bilateral-Opt-C++", "Bilateral\Bilateral-Opt.vcxproj", "{82A9E9A5-1A30-479B-BC3E-E46E7C9215F9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bilateral-Images", "Bilateral\Bilateral-Images.vcxproj", "{69112C32-F65C-4480-8F6F-7AFA60F96759}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bilateral-Images-C++", "Bilateral\Bilateral-Images.vcxproj", "{69112C32-F65C-4480-8F6F-7AFA60F96759}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bilateral-Meta", "Bilateral\Bilateral-Meta.vcxproj", "{1BFEACDD-97EB-457C-BE44-81D1A6524029}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bilateral-Meta-C++", "Bilateral\Bilateral-Meta.vcxproj", "{1BFEACDD-97EB-457C-BE44-81D1A6524029}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bilateral-Images-C", "Bilateral\Bilateral-Images-C\Bilateral-Images-C.vcxproj", "{2F4D8BDA-D905-478F-A2EA-F66599020E48}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bilateral-Meta-C", "Bilateral\Bilateral-Meta-C\Bilateral-Meta-C.vcxproj", "{FA361503-B8FA-4601-852B-B3699BCCF0D7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bilateral-Opt-C", "Bilateral\Bilateral-Opt-C\Bilateral-Opt-C.vcxproj", "{E382F915-1F81-40D4-83F7-0FC89D0D75E9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HostDevTransfer-C", "HostDevTransfer\HostDevTransfer-C\HostDevTransfer-C.vcxproj", "{E021FCD4-B650-4EF7-A6A0-4808F4A2374C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NBody-GL-C", "NBody-GL\NBody-GL-C\NBody-GL-C.vcxproj", "{81D876D6-D7BB-40BC-B705-A75608EAE2E5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NBody-GL-VBO-C", "NBody-GL-VBO\NBody-GL-VBO-C\NBody-GL-VBO-C.vcxproj", "{5F579A52-2D1A-4EA0-AEDD-C957108A6199}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +69,30 @@ Global
 		{1BFEACDD-97EB-457C-BE44-81D1A6524029}.Debug|Win32.Build.0 = Debug|Win32
 		{1BFEACDD-97EB-457C-BE44-81D1A6524029}.Release|Win32.ActiveCfg = Release|Win32
 		{1BFEACDD-97EB-457C-BE44-81D1A6524029}.Release|Win32.Build.0 = Release|Win32
+		{2F4D8BDA-D905-478F-A2EA-F66599020E48}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2F4D8BDA-D905-478F-A2EA-F66599020E48}.Debug|Win32.Build.0 = Debug|Win32
+		{2F4D8BDA-D905-478F-A2EA-F66599020E48}.Release|Win32.ActiveCfg = Release|Win32
+		{2F4D8BDA-D905-478F-A2EA-F66599020E48}.Release|Win32.Build.0 = Release|Win32
+		{FA361503-B8FA-4601-852B-B3699BCCF0D7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FA361503-B8FA-4601-852B-B3699BCCF0D7}.Debug|Win32.Build.0 = Debug|Win32
+		{FA361503-B8FA-4601-852B-B3699BCCF0D7}.Release|Win32.ActiveCfg = Release|Win32
+		{FA361503-B8FA-4601-852B-B3699BCCF0D7}.Release|Win32.Build.0 = Release|Win32
+		{E382F915-1F81-40D4-83F7-0FC89D0D75E9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E382F915-1F81-40D4-83F7-0FC89D0D75E9}.Debug|Win32.Build.0 = Debug|Win32
+		{E382F915-1F81-40D4-83F7-0FC89D0D75E9}.Release|Win32.ActiveCfg = Release|Win32
+		{E382F915-1F81-40D4-83F7-0FC89D0D75E9}.Release|Win32.Build.0 = Release|Win32
+		{E021FCD4-B650-4EF7-A6A0-4808F4A2374C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E021FCD4-B650-4EF7-A6A0-4808F4A2374C}.Debug|Win32.Build.0 = Debug|Win32
+		{E021FCD4-B650-4EF7-A6A0-4808F4A2374C}.Release|Win32.ActiveCfg = Release|Win32
+		{E021FCD4-B650-4EF7-A6A0-4808F4A2374C}.Release|Win32.Build.0 = Release|Win32
+		{81D876D6-D7BB-40BC-B705-A75608EAE2E5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{81D876D6-D7BB-40BC-B705-A75608EAE2E5}.Debug|Win32.Build.0 = Debug|Win32
+		{81D876D6-D7BB-40BC-B705-A75608EAE2E5}.Release|Win32.ActiveCfg = Release|Win32
+		{81D876D6-D7BB-40BC-B705-A75608EAE2E5}.Release|Win32.Build.0 = Release|Win32
+		{5F579A52-2D1A-4EA0-AEDD-C957108A6199}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5F579A52-2D1A-4EA0-AEDD-C957108A6199}.Debug|Win32.Build.0 = Debug|Win32
+		{5F579A52-2D1A-4EA0-AEDD-C957108A6199}.Release|Win32.ActiveCfg = Release|Win32
+		{5F579A52-2D1A-4EA0-AEDD-C957108A6199}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
