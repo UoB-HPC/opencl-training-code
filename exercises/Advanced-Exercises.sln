@@ -11,7 +11,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NBody-GL", "NBody-GL\NBody-
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bilateral", "Bilateral\Bilateral.vcxproj", "{F08CBA61-B895-4F44-8523-9F715BFC33BC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeviceInfo", "DeviceInfo\DeviceInfo.vcxproj", "{EA63A45D-87BE-47F7-9520-02171E4CABB5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeviceInfo", "DeviceInfo\DeviceInfo-C++.vcxproj", "{EA63A45D-87BE-47F7-9520-02171E4CABB5}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NBody-GL-VBO", "NBody-GL-VBO\NBody-GL-VBO.vcxproj", "{25994F75-1301-4D29-A876-90D7929E7B44}"
 EndProject
