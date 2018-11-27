@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
 #if defined(__APPLE__)
   bool useGLInterop = strstr(extensions, "cl_APPLE_gl_sharing") != NULL;
 #else
-  bool useGLInterop = strstr(extensions, "cl_khr_gl_sharing") != NULL);
+  bool useGLInterop = strstr(extensions, "cl_khr_gl_sharing") != NULL;
 #endif
 
   char name[MAX_INFO_STRING];
