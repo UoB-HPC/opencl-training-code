@@ -17,6 +17,9 @@
 #include <iostream>
 #include <vector>
 
+#ifdef __APPLE__
+#define CL_SILENCE_DEPRECATION
+#endif
 #define CL_HPP_ENABLE_EXCEPTIONS
 #define CL_HPP_TARGET_OPENCL_VERSION 120
 #define CL_HPP_MINIMUM_OPENCL_VERSION 120

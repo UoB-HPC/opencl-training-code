@@ -27,8 +27,14 @@ typedef struct
 HostImage* createHostImage(int width, int height);
 #endif
 
+#ifdef __APPLE__
+#define CL_SILENCE_DEPRECATION
+#include <OpenCL/opencl.h>
+#include <unistd.h>
+#else
 #define CL_TARGET_OPENCL_VERSION 120
 #include <CL/cl.h>
+#endif
 
 #include <device_picker.h>
 #include <util.h>

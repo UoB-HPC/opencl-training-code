@@ -17,11 +17,15 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if defined(__APPLE__)
+#define GL_SILENCE_DEPRECATION
+#endif
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 #undef main
 
 #if defined(__APPLE__)
+  #define CL_SILENCE_DEPRECATION
   #include <OpenCL/OpenCL.h>
   #include <OpenGL/OpenGL.h>
 #else

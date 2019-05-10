@@ -31,6 +31,7 @@
 #endif
 
 #ifdef __APPLE__
+#define GL_SILENCE_DEPRECATION
 #include <OpenGL/OpenGL.h>
 #endif
 
@@ -39,6 +40,7 @@
 #undef main
 
 #if defined(__APPLE__)
+  #define CL_SILENCE_DEPRECATION
   #include <OpenCL/OpenCL.h>
 #else
   #define CL_TARGET_OPENCL_VERSION 120

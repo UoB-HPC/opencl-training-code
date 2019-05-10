@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #ifdef __APPLE__
+#define CL_SILENCE_DEPRECATION
 #include <OpenCL/opencl.h>
 #include <unistd.h>
 #else
