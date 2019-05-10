@@ -11,11 +11,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pi-C++", "Pi\Pi-C++.vcxproj
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VAdd-C++", "VAdd\VAdd-C++.vcxproj", "{348F3964-6754-4E89-A292-99453D5195EC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeviceInfo-C", "DeviceInfo\DeviceInfo-C\DeviceInfo-C.vcxproj", "{C6054873-8F47-4DB5-A624-0CF99E9828B7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeviceInfo-C", "DeviceInfo\VS-DeviceInfo-C\DeviceInfo-C.vcxproj", "{C6054873-8F47-4DB5-A624-0CF99E9828B7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MatMul-C", "MatMul\MatMul-C\MatMul-C.vcxproj", "{DD49A8ED-591A-4155-887C-AAA07DC7D779}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MatMul-C", "MatMul\VS-MatMul-C\MatMul-C.vcxproj", "{DD49A8ED-591A-4155-887C-AAA07DC7D779}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VAdd-C", "VAdd\VAdd-C\VAdd-C.vcxproj", "{B245884A-6669-4D82-A125-6D8E43EBC5C1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VAdd-C", "VAdd\VS-VAdd-C\VAdd-C.vcxproj", "{B245884A-6669-4D82-A125-6D8E43EBC5C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

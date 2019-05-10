@@ -9,9 +9,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MatMul-C++", "MatMul\MatMul
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pi-C++", "Pi\Pi.vcxproj", "{2AF73B98-C4B3-46C3-8FFC-702FB5CF9BB9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MatMul-C", "MatMul\MatMul-C\MatMul-C.vcxproj", "{3EFF790A-F5EE-495A-B79E-BEF61B4CE331}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MatMul-C", "MatMul\VS-MatMul-C\MatMul-C.vcxproj", "{3EFF790A-F5EE-495A-B79E-BEF61B4CE331}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VAdd_Chain-C", "VAdd_Chain\VAdd_Chain-C\VAdd_Chain-C.vcxproj", "{B7C3BC3E-7950-409C-A4B2-61D83E406367}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VAdd_Chain-C", "VAdd_Chain\VS-VAdd_Chain-C\VAdd_Chain-C.vcxproj", "{B7C3BC3E-7950-409C-A4B2-61D83E406367}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

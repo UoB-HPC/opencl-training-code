@@ -19,17 +19,17 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bilateral-Images-C++", "Bil
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bilateral-Meta-C++", "Bilateral\Bilateral-Meta.vcxproj", "{1BFEACDD-97EB-457C-BE44-81D1A6524029}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bilateral-Images-C", "Bilateral\Bilateral-Images-C\Bilateral-Images-C.vcxproj", "{2F4D8BDA-D905-478F-A2EA-F66599020E48}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bilateral-Images-C", "Bilateral\VS-Bilateral-Images-C\Bilateral-Images-C.vcxproj", "{2F4D8BDA-D905-478F-A2EA-F66599020E48}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bilateral-Meta-C", "Bilateral\Bilateral-Meta-C\Bilateral-Meta-C.vcxproj", "{FA361503-B8FA-4601-852B-B3699BCCF0D7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bilateral-Meta-C", "Bilateral\VS-Bilateral-Meta-C\Bilateral-Meta-C.vcxproj", "{FA361503-B8FA-4601-852B-B3699BCCF0D7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bilateral-Opt-C", "Bilateral\Bilateral-Opt-C\Bilateral-Opt-C.vcxproj", "{E382F915-1F81-40D4-83F7-0FC89D0D75E9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bilateral-Opt-C", "Bilateral\VS-Bilateral-Opt-C\Bilateral-Opt-C.vcxproj", "{E382F915-1F81-40D4-83F7-0FC89D0D75E9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HostDevTransfer-C", "HostDevTransfer\HostDevTransfer-C\HostDevTransfer-C.vcxproj", "{E021FCD4-B650-4EF7-A6A0-4808F4A2374C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HostDevTransfer-C", "HostDevTransfer\VS-HostDevTransfer-C\HostDevTransfer-C.vcxproj", "{E021FCD4-B650-4EF7-A6A0-4808F4A2374C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NBody-GL-C", "NBody-GL\NBody-GL-C\NBody-GL-C.vcxproj", "{81D876D6-D7BB-40BC-B705-A75608EAE2E5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NBody-GL-C", "NBody-GL\VS-NBody-GL-C\NBody-GL-C.vcxproj", "{81D876D6-D7BB-40BC-B705-A75608EAE2E5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NBody-GL-VBO-C", "NBody-GL-VBO\NBody-GL-VBO-C\NBody-GL-VBO-C.vcxproj", "{5F579A52-2D1A-4EA0-AEDD-C957108A6199}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NBody-GL-VBO-C", "NBody-GL-VBO\VS-NBody-GL-VBO-C\NBody-GL-VBO-C.vcxproj", "{5F579A52-2D1A-4EA0-AEDD-C957108A6199}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

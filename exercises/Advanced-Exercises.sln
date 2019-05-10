@@ -15,13 +15,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeviceInfo-C++", "DeviceInf
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NBody-GL-VBO-C++", "NBody-GL-VBO\NBody-GL-VBO.vcxproj", "{25994F75-1301-4D29-A876-90D7929E7B44}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bilateral-C", "Bilateral\Bilateral-C\Bilateral-C.vcxproj", "{2C627CE4-EF01-4BC3-A610-ED48A8B25142}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bilateral-C", "Bilateral\VS-Bilateral-C\Bilateral-C.vcxproj", "{2C627CE4-EF01-4BC3-A610-ED48A8B25142}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HostDevTransfer-C", "HostDevTransfer\HostDevTransfer-C\HostDevTransfer-C.vcxproj", "{6CB6B11D-A950-4B5E-BD08-D509D6FD7049}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HostDevTransfer-C", "HostDevTransfer\VS-HostDevTransfer-C\HostDevTransfer-C.vcxproj", "{6CB6B11D-A950-4B5E-BD08-D509D6FD7049}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NBody-GL-C", "NBody-GL\NBody-GL-C\NBody-GL-C.vcxproj", "{CD1EEB28-3F57-4E77-BFAB-DB5D8B528929}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NBody-GL-C", "NBody-GL\VS-NBody-GL-C\NBody-GL-C.vcxproj", "{CD1EEB28-3F57-4E77-BFAB-DB5D8B528929}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NBody-GL-VBO-C", "NBody-GL-VBO\NBody-GL-VBO-C\NBody-GL-VBO-C.vcxproj", "{3E7E5C78-BE49-4030-894B-BE4FF2BB8DF2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NBody-GL-VBO-C", "NBody-GL-VBO\VS-NBody-GL-VBO-C\NBody-GL-VBO-C.vcxproj", "{3E7E5C78-BE49-4030-894B-BE4FF2BB8DF2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
