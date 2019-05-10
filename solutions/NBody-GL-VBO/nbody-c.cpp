@@ -41,6 +41,7 @@
 #if defined(__APPLE__)
   #include <OpenCL/OpenCL.h>
 #else
+  #define CL_TARGET_OPENCL_VERSION 120
   #include <CL/cl.h>
   #include <CL/cl_ext.h>
   #include <CL/cl_gl.h>

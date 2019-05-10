@@ -27,6 +27,7 @@ typedef struct
 HostImage* createHostImage(int width, int height);
 #endif
 
+#define CL_TARGET_OPENCL_VERSION 120
 #include <CL/cl.h>
 
 #include <device_picker.h>
